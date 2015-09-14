@@ -1,6 +1,8 @@
 # *time-tracking*
 
-Command line time tracking.
+Minimalistic command line time tracking.
+
+[![asciicast](https://asciinema.org/a/26324.png)](https://asciinema.org/a/26324)
 
 [![npm version](https://img.shields.io/npm/v/time-tracking.svg)](https://www.npmjs.com/package/time-tracking)
 [![dependency status](https://img.shields.io/david/derhuerst/time-tracking.svg)](https://david-dm.org/derhuerst/time-tracking)
