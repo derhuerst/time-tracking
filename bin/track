@@ -145,14 +145,12 @@ function status (trackers, name) {
 
 function statusAll (trackers) {
 	if (argv.silent) return;
-	if (!argv.porcelain) process.stdout.write('\n');
 	var count = 0;
 	for (name in trackers) {
 		count++;
 		status(trackers, name);
 	}
 	if (count === 0) process.stdout.write(chalk.gray('no trackers\n'));
-	if (!argv.porcelain) process.stdout.write('\n');
 }
 
 
