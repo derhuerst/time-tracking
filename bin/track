@@ -1,0 +1,242 @@
+#!/usr/bin/env node
+
+var yargs =			require('yargs');
+var path =			require('path');
+var home =			require('os-homedir')();
+var fs =			require('fs');
+var chalk =			require('chalk');
+var lPad =			require('left-pad');
+var rPad =			require('right-pad');
+var moment =		require('moment');
+
+
+
+
+
+var figures = {
+	started:	chalk.green('\u25b6'),
+	stopped:	chalk.red('\u25a0'),
+	error:		chalk.red('!')
+};
+
+
+
+moment.locale('en', {
+	relativeTime: {
+		future:	'%s',
+		past:	'%s ago',
+		s:		'%ds',
+		m:		'1m',
+		mm:		'%dm',
+		h:		'1h',
+		hh:		'%dh',
+		d:		'1d',
+		dd:		'%dd',
+		M:		'1mo',
+		MM:		'%dmo',
+		y:		'1y',
+		yy:		'%dy'
+	}
+});
+
+
+
+
+
+function start (trackers, name) {
+	if (!name) {
+		process.stderr.write('Missing `name` argument.');
+		return process.exit(1);
+	}
+
+	var tracker = trackers[name];
+	var output = [
+		figures.started,
+		chalk.underline(name)
+	];
+
+	if (tracker) {
+		if (!tracker.started) {
+			tracker.started = Date.now();
+			output.push(chalk.gray('resumed'));
+		} else output.push(chalk.gray('already running'));
+	} else {
+		tracker = trackers[name] = {
+			name:		name,
+			started:	Date.now(),
+			value:		0,
+		};
+		output.push(chalk.gray('started'));
+	};
+
+	if (!argv.silent) {
+		if (argv.porcelain) process.stdout.write(JSON.stringify(tracker) + '\n');
+		else process.stdout.write(output.join(' ') + '\n');
+	}
+}
+
+
+
+
+
+function stop (trackers, name) {
+	if (!name) {
+		process.stderr.write('Missing `name` argument.');
+		return process.exit(1);
+	}
+
+	var tracker = trackers[name];
+	var output = [];
+
+	if (tracker) {
+		if (!tracker.started)
+			output.push(figures.error, chalk.underline(tracker.name), chalk.gray('isn\'t started'));
+		else {
+			var now = Date.now();
+			tracker.value += now - tracker.started;
+			tracker.started = false;
+			output.push(figures.stopped, chalk.underline(tracker.name), chalk.gray('stopped'));
+		}
+	} else output.push(figures.error, chalk.underline(name), chalk.gray('doesn\'t exist'));
+
+	if (!argv.silent) {
+		if (argv.porcelain) process.stdout.write(JSON.stringify(tracker) + '\n');
+		else process.stdout.write(output.join(' ') + '\n');
+	}
+}
+
+
+
+
+
+function status (trackers, name) {
+	if (!name) {
+		process.stderr.write('Missing `name` argument.');
+		return process.exit(1);
+	}
+
+	if (argv.silent) return;
+
+	var tracker = trackers[name];
+	var output = [];
+
+	if (tracker) {
+		if (argv.porcelain)
+			return process.stdout.write(JSON.stringify(tracker) + '\n');
+
+		output.push(lPad(chalk.underline(name), 25), '');
+		var v = tracker.value;
+		var d = tracker.started ? Date.now() - tracker.started : 0;
+		output.push(rPad(chalk.cyan(moment.duration(v + d).humanize()), 15));
+		if (tracker.started)
+			output.push('', figures.started, moment.duration(d).humanize());
+
+	} else {
+		process.exit(1);
+		if (argv.porcelain) return process.stdout.write('{}' + '\n');
+
+		output.push(figures.error, chalk.underline(name), chalk.gray('doesn\'t exist'));
+
+	};
+	process.stdout.write(output.join(' ') + '\n');
+}
+
+
+
+function statusAll (trackers) {
+	if (argv.silent) return;
+	if (!argv.porcelain) process.stdout.write('\n');
+	var count = 0;
+	for (name in trackers) {
+		count++;
+		status(trackers, name);
+	}
+	if (count === 0) process.stdout.write(chalk.gray('no trackers\n'));
+	if (!argv.porcelain) process.stdout.write('\n');
+}
+
+
+
+
+
+function help () {
+	process.stdout.write('\n' + [
+		chalk.yellow('Usage:'),
+		'  track <start|stop> <name>',
+		'  track status [name]',
+		'',
+		chalk.yellow('start <name>'),
+		'  Start a new or resume an existing tracker.',
+		'  `name` must be a valid JSON key.',
+		chalk.yellow('stop <name>'),
+		'  Stop an existing tracker.',
+		'  The tracked session will be put into history.',
+		'',
+		chalk.yellow('status'),
+		'  Show the status of a tracker.',
+		chalk.yellow('status [name]'),
+		'  Show the status of all active trackers.',
+		'',
+		chalk.yellow('Options:'),
+		'  -s, --silent		No output',
+		'  -p, --porcelain		Machine-readable output.',
+	].join('\n') + '\n\n');
+	return process.exit(1);
+}
+
+
+
+
+
+var argv = yargs.argv;
+
+argv.silent = argv.silent || argv.s || false;
+argv.porcelain = argv.porcelain || argv.p || false;
+
+
+
+var dir = path.join(home, 'time-tracking');
+try {
+	if (!fs.statSync(dir).isDirectory()) {
+		process.stderr.write(dir + ' is not a directory.');
+		process.exit(1);
+	}
+} catch (err) {
+	try { fs.mkdirSync(dir); }
+	catch (err) {
+		process.stderr.write(err.message);
+		process.exit(1);
+	}
+}
+
+var file = path.join(dir, 'trackers.json');
+try {
+	var trackers = fs.readFileSync(file);
+	try { trackers = JSON.parse(trackers); }
+	catch (err) {
+		process.stderr.write('Cannot parse ' + file + '.');
+		process.exit(1);
+	}
+} catch (err) { trackers = {}; }
+
+
+
+if (argv._[0] === 'start') start(trackers, argv._[1]);
+else if (argv._[0] === 'stop') stop(trackers, argv._[1]);
+else if (argv._[0] === 'status') {
+	if (argv._[1]) status(trackers, argv._[1]);
+	else statusAll(trackers);
+} else if (argv.help || argv.h) help();
+else {
+	process.stdout.write('Invalid command.' + '\n');
+	process.exit(1);
+}
+
+
+
+try {
+	fs.writeFileSync(file, JSON.stringify(trackers));
+} catch (err) {
+	process.stderr.write(err.message);
+	process.exit(1);
+}
