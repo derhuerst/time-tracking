@@ -1,16 +1,19 @@
 {
 	"name": "time-tracking",
-	"description": "Command line time tracking.",
+	"description": "Minimalistic command line time tracking.",
 	"version": "0.1.0",
 	"bin": {
-		"track": "./bin/track"
+		"track":		"./bin/track"
 	},
 	"preferGlobal": true,
 	"keywords": [
 		"time",
 		"tracking",
+		"track",
+		"tasks",
 		"cli",
 		"command line",
+		"terminal",
 		"tool",
 		"javascript"
 	],
@@ -24,12 +27,17 @@
 	"bugs": "https://github.com/derhuerst/time-tracking/issues",
 	"license": "MIT",
 	"dependencies": {
-		"yargs":		"^3.24.0"
+		"yargs":		"^3.24.0",
+		"os-homedir":	"^1.0.1",
+		"chalk":		"^1.1.1",
+		"left-pad":		"^0.0.4",
+		"right-pad":	"^0.0.1",
+		"moment":		"^2.10.6"
 	},
 	"scripts": {
-		"track":	"./bin/track"
+		"track":		"./bin/track"
 	},
 	"directories": {
-		"bin": "./bin"
+		"bin":			"./bin"
 	}
 }
