@@ -160,7 +160,7 @@ function statusAll (trackers) {
 
 
 function help () {
-	process.stdout.write('\n' + [
+	process.stdout.write([
 		chalk.yellow('track start <name>'),
 		chalk.yellow('track + <name>'),
 		'  Start a new or resume an existing tracker. `name` must be a valid JSON key.',
@@ -178,7 +178,7 @@ function help () {
 		chalk.yellow('Options:'),
 		'  -s, --silent		No output',
 		'  -p, --porcelain	Machine-readable output.',
-	].join('\n') + '\n\n');
+	].join('\n') + '\n');
 	return process.exit(1);
 }
 

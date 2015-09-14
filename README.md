@@ -20,21 +20,21 @@ npm install -g time-tracking
 ```
 track start <name>
 track + <name>
-  Start a new or resume an existing tracker. `name` must be a valid JSON key.
+	Start a new or resume an existing tracker. `name` must be a valid JSON key.
 track stop <name>
 track - <name>
-  Stop an existing tracker.
+	Stop an existing tracker.
 
 track status <name>
 track ? <name>
-  Show the status of a tracker.
+	Show the status of a tracker.
 track status
 track ?
-  Show the status of all active trackers.
+	Show the status of all active trackers.
 
 Options:
-  -s, --silent		No output
-  -p, --porcelain	Machine-readable output.
+	-s, --silent		No output
+	-p, --porcelain	Machine-readable output.
 
 ```
 
