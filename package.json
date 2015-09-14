@@ -1,0 +1,35 @@
+{
+	"name": "time-tracking",
+	"description": "Command line time tracking.",
+	"version": "0.1.0",
+	"bin": {
+		"track": "./bin/track"
+	},
+	"preferGlobal": true,
+	"keywords": [
+		"time",
+		"tracking",
+		"cli",
+		"command line",
+		"tool",
+		"javascript"
+	],
+	"author": {
+		"name": "Jannis R",
+		"email": "mail@jannisr.de",
+		"url": "http://jannisr.de"
+	},
+	"homepage": "https://github.com/derhuerst/time-tracking",
+	"repository": "git://github.com/derhuerst/time-tracking.git",
+	"bugs": "https://github.com/derhuerst/time-tracking/issues",
+	"license": "MIT",
+	"dependencies": {
+		"yargs":		"^3.24.0"
+	},
+	"scripts": {
+		"track":	"./bin/track"
+	},
+	"directories": {
+		"bin": "./bin"
+	}
+}
