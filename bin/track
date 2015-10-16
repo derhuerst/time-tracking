@@ -7,7 +7,7 @@ var fs =			require('fs');
 var chalk =			require('chalk');
 var lPad =			require('left-pad');
 var rPad =			require('right-pad');
-var moment =		require('moment');
+var ms =			require('ms');
 
 
 
@@ -18,26 +18,6 @@ var figures = {
 	stopped:	chalk.red('\u25a0'),
 	error:		chalk.red('!')
 };
-
-
-
-moment.locale('en', {
-	relativeTime: {
-		future:	'%s',
-		past:	'%s ago',
-		s:		'%ds',
-		m:		'1m',
-		mm:		'%dm',
-		h:		'1h',
-		hh:		'%dh',
-		d:		'1d',
-		dd:		'%dd',
-		M:		'1mo',
-		MM:		'%dmo',
-		y:		'1y',
-		yy:		'%dy'
-	}
-});
 
 
 
@@ -127,9 +107,9 @@ function status (trackers, name) {
 		output.push(lPad(chalk.underline(name), 25), '');
 		var v = tracker.value;
 		var d = tracker.started ? Date.now() - tracker.started : 0;
-		output.push(rPad(chalk.cyan(moment.duration(v + d).humanize()), 15));
+		output.push(rPad(chalk.cyan(ms(v + d)), 15));
 		if (tracker.started)
-			output.push('', figures.started, moment.duration(d).humanize());
+			output.push('', figures.started, ms(d));
 
 	} else {
 		process.exit(1);
@@ -167,10 +147,10 @@ function help () {
 		'  Stop an existing tracker.',
 		'',
 		chalk.yellow('track status <name>'),
-		chalk.yellow('track ? <name>'),
+		chalk.yellow('track s <name>'),
 		'  Show the status of a tracker.',
 		chalk.yellow('track status'),
-		chalk.yellow('track ?'),
+		chalk.yellow('track s'),
 		'  Show the status of all active trackers.',
 		'',
 		chalk.yellow('Options:'),

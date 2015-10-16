@@ -28,10 +28,10 @@ track . <name>
 	Stop an existing tracker.
 
 track status <name>
-track ? <name>
+track s <name>
 	Show the status of a tracker.
 track status
-track ?
+track s
 	Show the status of all active trackers.
 
 Options:
