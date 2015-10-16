@@ -202,7 +202,7 @@ function statusAll (trackers) {
 function help () {
 	process.stdout.write([
 		chalk.yellow('track start <name>'),
-		chalk.yellow('track > <name>'),
+		chalk.yellow('track - <name>'),
 		'  Start a new or resume an existing tracker. `name` must be a valid JSON key.',
 		chalk.yellow('track stop <name>'),
 		chalk.yellow('track . <name>'),
@@ -266,7 +266,7 @@ try {
 
 
 
-if (argv._[0] === 'start' || argv._[0] === '>') start(trackers, argv._[1]);
+if (argv._[0] === 'start' || argv._[0] === '-') start(trackers, argv._[1]);
 else if (argv._[0] === 'stop' || argv._[0] === '.') stop(trackers, argv._[1]);
 else if (argv._[0] === 'add' || argv._[0] === '+') add(trackers, argv._[1], argv._[2]);
 else if (argv._[0] === 'subtract' || argv._[0] === '-') subtract(trackers, argv._[1], argv._[2]);

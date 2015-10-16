@@ -21,7 +21,7 @@ npm install -g time-tracking
 
 ```
 track start <name>
-track > <name>
+track - <name>
 	Start a new or resume an existing tracker. `name` must be a valid JSON key.
 track stop <name>
 track . <name>
