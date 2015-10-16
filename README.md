@@ -27,6 +27,14 @@ track stop <name>
 track . <name>
 	Stop an existing tracker.
 
+track add <name> <amount>
+track + <name>
+	Add any amount of time to an existing tracker.
+
+track subtract <name> <amount>
+track - <name>
+	Subtract any amount of time from an existing tracker.
+
 track status <name>
 track s <name>
 	Show the status of a tracker.

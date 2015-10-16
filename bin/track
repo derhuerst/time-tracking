@@ -89,6 +89,68 @@ function stop (trackers, name) {
 
 
 
+function add (trackers, name, amount) {
+	if (!name) {
+		process.stderr.write('Missing `name` argument.');
+		return process.exit(1);
+	}
+	if (!amount) {
+		process.stderr.write('Missing `amount` argument.');
+		return process.exit(1);
+	}
+
+	var tracker = trackers[name];
+	var output = [];
+
+	if (tracker) {
+		tracker.value += ms(amount);
+		output.push(chalk.gray('added'));
+		output.push(chalk.cyan(ms(ms(amount))));
+		output.push(chalk.gray('to'));
+		output.push(chalk.underline(tracker.name));
+	} else output.push(figures.error, chalk.underline(name), chalk.gray('doesn\'t exist'));
+
+	if (!argv.silent) {
+		if (argv.porcelain) process.stdout.write(JSON.stringify(tracker) + '\n');
+		else process.stdout.write(output.join(' ') + '\n');
+	}
+}
+
+
+
+
+
+function subtract (trackers, name, amount) {
+	if (!name) {
+		process.stderr.write('Missing `name` argument.');
+		return process.exit(1);
+	}
+	if (!amount) {
+		process.stderr.write('Missing `amount` argument.');
+		return process.exit(1);
+	}
+
+	var tracker = trackers[name];
+	var output = [];
+
+	if (tracker) {
+		tracker.value -= ms(amount);
+		output.push(chalk.gray('subtracted'));
+		output.push(chalk.cyan(ms(ms(amount))));
+		output.push(chalk.gray('from'));
+		output.push(chalk.underline(tracker.name));
+	} else output.push(figures.error, chalk.underline(name), chalk.gray('doesn\'t exist'));
+
+	if (!argv.silent) {
+		if (argv.porcelain) process.stdout.write(JSON.stringify(tracker) + '\n');
+		else process.stdout.write(output.join(' ') + '\n');
+	}
+}
+
+
+
+
+
 function status (trackers, name) {
 	if (!name) {
 		process.stderr.write('Missing `name` argument.');
@@ -146,6 +208,13 @@ function help () {
 		chalk.yellow('track . <name>'),
 		'  Stop an existing tracker.',
 		'',
+		chalk.yellow('track add <name> <amount>'),
+		chalk.yellow('track + <name> <amount>'),
+		'  Add any amount of time to an existing tracker.',
+		chalk.yellow('track subtract <name> <amount>'),
+		chalk.yellow('track - <name> <amount>'),
+		'  Subtract any amount of time from an existing tracker.',
+		'',
 		chalk.yellow('track status <name>'),
 		chalk.yellow('track s <name>'),
 		'  Show the status of a tracker.',
@@ -199,6 +268,8 @@ try {
 
 if (argv._[0] === 'start' || argv._[0] === '>') start(trackers, argv._[1]);
 else if (argv._[0] === 'stop' || argv._[0] === '.') stop(trackers, argv._[1]);
+else if (argv._[0] === 'add' || argv._[0] === '+') add(trackers, argv._[1], argv._[2]);
+else if (argv._[0] === 'subtract' || argv._[0] === '-') subtract(trackers, argv._[1], argv._[2]);
 else if (argv._[0] === 'status' || argv._[0] === 's') {
 	if (argv._[1]) status(trackers, argv._[1]);
 	else statusAll(trackers);
