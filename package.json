@@ -3,7 +3,7 @@
 	"description": "Minimalistic command line time tracking.",
 	"version": "0.2.0",
 	"bin": {
-		"track":		"./bin/track"
+		"track":		"./bin/track.js"
 	},
 	"preferGlobal": true,
 	"keywords": [
@@ -15,7 +15,8 @@
 		"command line",
 		"terminal",
 		"tool",
-		"javascript"
+		"javascript",
+		"coffeescript"
 	],
 	"author": {
 		"name": "Jannis R",
@@ -35,7 +36,7 @@
 		"ms":			"^0.7.1"
 	},
 	"scripts": {
-		"track":		"./bin/track"
+		"track":		"./bin/track.js"
 	},
 	"directories": {
 		"bin":			"./bin"
