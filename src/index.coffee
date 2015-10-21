@@ -15,10 +15,10 @@ module.exports =
 
 
 
-	_read: () ->
+	read: () ->
 		file = @file
 		dir = path.dirname file
-		return new Promise resolve, reject
+		return new Promise (resolve, reject) ->
 			fs.stat dir
 			.catch () -> fs.mkdir dir
 			.catch reject
@@ -34,7 +34,7 @@ module.exports =
 	_write: (trackers) ->
 		file = @file
 		dir = path.dirname file
-		return new Promise resolve, reject
+		return new Promise (resolve, reject) ->
 			fs.writeFile file, JSON.stringify trackers
 			.catch reject
 			.then () -> resolve true
@@ -44,9 +44,9 @@ module.exports =
 	start: (tracker) ->
 		now = Date.now()
 		result = {}
-		return @_read()
+		return @read()
 		.then (trackers) ->
-			if trackers[tracker] then
+			if trackers[tracker]
 				result.isNew = false
 				if trackers[tracker].started
 					result.wasRunning = true
@@ -69,7 +69,7 @@ module.exports =
 	stop: (tracker) ->
 		now = Date.now()
 		result = {}
-		return @_read()
+		return @read()
 		.then (trackers) ->
 			if not trackers[tracker]
 				return new Error "#{tracker} doesn't exist."
@@ -86,7 +86,7 @@ module.exports =
 
 	add: (tracker, amount) ->
 		now = Date.now()
-		return @_read()
+		return @read()
 		.then (trackers) ->
 			if not trackers[tracker]
 				return new Error "#{tracker} doesn't exist."
