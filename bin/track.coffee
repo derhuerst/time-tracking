@@ -32,8 +32,6 @@ start = (name, options = {}) ->
 
 	track.start(name).then (ctx) ->
 		return if options.silent
-		if options.porcelain
-			process.stdout.write JSON.stringify ctx
 
 		process.stdout.write [
 			figures.started
@@ -58,8 +56,6 @@ stop = (name, options = {}) ->
 	.catch showError
 	.then (ctx) ->
 		return if options.silent
-		if options.porcelain
-			process.stdout.write JSON.stringify ctx
 
 		process.stdout.write [
 			figures.stopped
@@ -84,8 +80,6 @@ add = (name, amount, options = {}) ->
 	.catch showError
 	.then (ctx) ->
 		return if options.silent
-		if options.porcelain
-			process.stdout.write JSON.stringify ctx
 
 		process.stdout.write [
 			chalk.gray 'added'
@@ -111,8 +105,6 @@ subtract = (name, amount, options = {}) ->
 	.catch showError
 	.then (ctx) ->
 		return if options.silent
-		if options.porcelain
-			process.stdout.write JSON.stringify ctx
 
 		process.stdout.write [
 			chalk.gray 'subtracted'
