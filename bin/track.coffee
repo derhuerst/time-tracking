@@ -160,7 +160,7 @@ singleStatus = (task) ->
 
 
 status = (name, options = {}) ->
-	track.read()
+	track.read name
 	.catch showError
 	.then (tasks) ->
 		return if options.silent
@@ -170,6 +170,7 @@ status = (name, options = {}) ->
 			count++
 			process.stdout.write singleStatus(task) + '\n'
 		if count is 0 then process.stdout.write chalk.gray 'no trackers\n'
+	.catch showError
 
 
 
@@ -178,30 +179,16 @@ status = (name, options = {}) ->
 
 
 argv = yargs.argv
+options =
+	silent:		argv.silent or argv.s or false
+	porcelain:	argv.porcelain or argv.p or false
 
-argv.silent = argv.silent or argv.s or false
-argv.porcelain = argv.porcelain or argv.p or false
-
-
-
-if (argv._[0] === 'start' || argv._[0] === '-') start(trackers, argv._[1]);
-else if (argv._[0] === 'stop' || argv._[0] === '.') stop(trackers, argv._[1]);
-else if (argv._[0] === 'add' || argv._[0] === '+') add(trackers, argv._[1], argv._[2]);
-else if (argv._[0] === 'subtract' || argv._[0] === '-') subtract(trackers, argv._[1], argv._[2]);
-else if (argv._[0] === 'status' || argv._[0] === 's') {
-	if (argv._[1]) status(trackers, argv._[1]);
-	else statusAll(trackers);
-} else if (argv.help || argv.h) help();
-else {
-	process.stdout.write('Invalid command.' + '\n');
-	process.exit(1);
-}
-
-
-
-try {
-	fs.writeFileSync(file, JSON.stringify(trackers));
-} catch (err) {
-	process.stderr.write(err.message);
-	process.exit(1);
-}
+switch argv._[0]
+	when 'start', '-' then start argv._[1], options
+	when 'stop', '.' then start argv._[1], options
+	when 'add', '+' then add argv._[1], argv._[2], options
+	when 'subtract', '-' then subtract argv._[1], argv._[2], options
+	when 'status', 's' then status argv._[1], options
+	else
+		if argv.help or argv.h then process.stdout.write help
+		else process.stderr.write 'invalid command\n'

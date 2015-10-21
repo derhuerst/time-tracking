@@ -15,7 +15,7 @@ module.exports =
 
 
 
-	read: () ->
+	read: (tracker) ->
 		file = @file
 		dir = path.dirname file
 		return new Promise (resolve, reject) ->
@@ -27,7 +27,13 @@ module.exports =
 					reject new Error "#{dir} is not a directory"
 				else return fs.readFile file
 			.catch reject
-			.then (content) -> resolve JSON.parse content
+			.then (trackers) ->
+				trackers = JSON.parse trackers
+				if tracker
+					if not trackers[tracker]
+						reject new Error "#{tracker} doesn't exist."
+					else resolve trackers[tracker]
+				else resolve trackers
 
 
 
