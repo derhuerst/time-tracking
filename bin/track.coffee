@@ -1,11 +1,10 @@
 yargs =			require 'yargs'
-path =			require 'path'
-home =			require('os-homedir')()
-fs =			require 'fs'
 chalk =			require 'chalk'
 lPad =			require 'left-pad'
 rPad =			require 'right-pad'
 ms =			require 'ms'
+
+track =			require '../src/index'
 
 
 
@@ -16,107 +15,63 @@ figures =
 	stopped:	chalk.red '\u25a0'
 	error:		chalk.red '!'
 
+showError = (err) ->
+	process.stderr.write [
+		figures.error
+		err.message
+	].join(' ') + '\n'
 
 
 
 
-start = (trackers, name) ->
+
+start = (name, options = {}) ->
 	if not name
 		process.stderr.write 'Missing `name` argument.'
 		return process.exit 1
 
-	tracker = trackers[name]
-	output = [
-		figures.started
-		chalk.underline name
-	]
+	track.start(name).then (ctx) ->
+		return if options.silent
+		if options.porcelain
+			process.stdout.write JSON.stringify ctx
 
-	if tracker
-		if not tracker.started
-			tracker.started = Date.now()
-			output.push chalk.gray 'resumed'
-		else output.push chalk.gray 'already running'
-	else
-		tracker = trackers[name] =
-			name:		name
-			started:	Date.now()
-			value:		0
-		output.push chalk.gray 'started'
-
-	return if argv.silent
-	if argv.porcelain then process.stdout.write JSON.stringify(tracker) + '\n'
-	else process.stdout.write output.join(' ') + '\n'
+		process.stdout.write [
+			figures.started
+			chalk.underline name
+			chalk.gray
+				if ctx.isNew then 'started'
+				else
+					if ctx.wasRunning then 'already running'
+					else 'resumed'
+		].join(' ') + '\n'
 
 
 
 
 
-stop = (trackers, name) ->
+stop = (name, options = {}) ->
 	if not name
 		process.stderr.write 'Missing `name` argument.'
 		return process.exit 1
 
-	tracker = trackers[name]
-	output = []
+	track.stop(name)
+	.catch showError
+	.then (ctx) ->
+		return if options.silent
+		if options.porcelain
+			process.stdout.write JSON.stringify ctx
 
-	if tracker
-		if not tracker.started
-			output.push figures.error
-			output.push chalk.underline tracker.name
-			output.push chalk.gray 'isn\'t started'
-		else
-			now = Date.now()
-			tracker.value += now - tracker.started
-			tracker.started = false
-			output.push figures.stopped
-			output.push chalk.underline tracker.name
-			output.push chalk.gray 'stopped'
-	else
-		output.push figures.error
-		output.push chalk.underline name
-		output.push chalk.gray 'doesn\'t exist'
-
-	if not argv.silent
-		if argv.porcelain
-			process.stdout.write JSON.stringify(tracker) + '\n'
-		else process.stdout.write output.join(' ') + '\n'
+		process.stdout.write [
+			figures.stopped
+			chalk.underline name
+			chalk.gray 'stopped'
+		].join(' ') + '\n'
 
 
 
 
 
-add = (trackers, name, amount) ->
-	if not name
-		process.stderr.write 'Missing `name` argument.'
-		return process.exit
-	if not amount
-		process.stderr.write 'Missing `amount` argument.'
-		return process.exit 1
-
-	tracker = trackers[name]
-	output = []
-
-	if tracker
-		tracker.value += ms amount
-		output.push chalk.gray 'added'
-		output.push chalk.cyan ms ms amount
-		output.push chalk.gray 'to'
-		output.push chalk.underline tracker.name
-	else
-		output.push figures.error
-		output.push chalk.underline name
-		output.push chalk.gray 'doesn\'t exist'
-
-	if not argv.silent
-		if argv.porcelain
-			process.stdout.write JSON.stringify(tracker) + '\n'
-		else process.stdout.write output.join(' ') + '\n'
-
-
-
-
-
-subtract = (trackers, name, amount) ->
+add = (name, amount, options = {}) ->
 	if not name
 		process.stderr.write 'Missing `name` argument.'
 		return process.exit 1
@@ -124,24 +79,47 @@ subtract = (trackers, name, amount) ->
 		process.stderr.write 'Missing `amount` argument.'
 		return process.exit 1
 
-	tracker = trackers[name]
-	output = []
+	amount = ms amount
+	track.add(name, amount)
+	.catch showError
+	.then (ctx) ->
+		return if options.silent
+		if options.porcelain
+			process.stdout.write JSON.stringify ctx
 
-	if tracker
-		tracker.value -= ms amount
-		output.push chalk.gray 'subtracted'
-		output.push chalk.cyan ms ms amount
-		output.push chalk.gray 'from'
-		output.push chalk.underline tracker.name
-	else
-		output.push figures.error
-		output.push chalk.underline name
-		output.push chalk.gray 'doesn\'t exist'
+		process.stdout.write [
+			chalk.gray 'added'
+			ms amount
+			chalk.gray 'to'
+			chalk.underline name
+		].join(' ') + '\n'
 
-	if not argv.silent
-		if argv.porcelain
-			process.stdout.write JSON.stringify(tracker) + '\n'
-		else process.stdout.write output.join(' ') + '\n'
+
+
+
+
+subtract = (name, amount, options = {}) ->
+	if not name
+		process.stderr.write 'Missing `name` argument.'
+		return process.exit 1
+	if not amount
+		process.stderr.write 'Missing `amount` argument.'
+		return process.exit 1
+
+	amount = ms amount
+	track.subtract(name, amount)
+	.catch showError
+	.then (ctx) ->
+		return if options.silent
+		if options.porcelain
+			process.stdout.write JSON.stringify ctx
+
+		process.stdout.write [
+			chalk.gray 'subtracted'
+			ms amount
+			chalk.gray 'from'
+			chalk.underline name
+		].join(' ') + '\n'
 
 
 
