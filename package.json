@@ -1,43 +1,44 @@
 {
-	"name": "time-tracking",
-	"description": "Minimalistic command line time tracking.",
-	"version": "0.2.0",
-	"bin": {
-		"track":		"./bin/track"
-	},
-	"preferGlobal": true,
-	"keywords": [
-		"time",
-		"tracking",
-		"track",
-		"tasks",
-		"cli",
-		"command line",
-		"terminal",
-		"tool",
-		"javascript"
-	],
-	"author": {
-		"name": "Jannis R",
-		"email": "mail@jannisr.de",
-		"url": "http://jannisr.de"
-	},
-	"homepage": "https://github.com/derhuerst/time-tracking",
-	"repository": "git://github.com/derhuerst/time-tracking.git",
-	"bugs": "https://github.com/derhuerst/time-tracking/issues",
-	"license": "MIT",
-	"dependencies": {
-		"yargs":		"^3.24.0",
-		"os-homedir":	"^1.0.1",
-		"chalk":		"^1.1.1",
-		"left-pad":		"^0.0.4",
-		"right-pad":	"^0.0.1",
-		"ms":			"^0.7.1"
-	},
-	"scripts": {
-		"track":		"./bin/track"
-	},
-	"directories": {
-		"bin":			"./bin"
-	}
+  "name": "time-tracking",
+  "description": "Minimalistic command line time tracking.",
+  "version": "0.2.0",
+  "main": "bin/track",
+  "bin": {
+    "track": "./bin/track"
+  },
+  "preferGlobal": true,
+  "keywords": [
+    "time",
+    "tracking",
+    "track",
+    "tasks",
+    "cli",
+    "command line",
+    "terminal",
+    "tool",
+    "javascript"
+  ],
+  "author": {
+    "name": "Jannis R",
+    "email": "mail@jannisr.de",
+    "url": "http://jannisr.de"
+  },
+  "homepage": "https://github.com/derhuerst/time-tracking",
+  "repository": "git://github.com/derhuerst/time-tracking.git",
+  "bugs": "https://github.com/derhuerst/time-tracking/issues",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^1.1.1",
+    "commander": "^2.9.0",
+    "left-pad": "^0.0.4",
+    "ms": "^0.7.1",
+    "os-homedir": "^1.0.1",
+    "right-pad": "^0.0.1"
+  },
+  "scripts": {
+    "track": "./bin/track"
+  },
+  "directories": {
+    "bin": "./bin"
+  }
 }

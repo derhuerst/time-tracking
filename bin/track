@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var yargs =			require('yargs');
+var program =	    require('commander');
 var path =			require('path');
 var home =			require('os-homedir')();
 var fs =			require('fs');
@@ -11,234 +11,351 @@ var ms =			require('ms');
 
 
 
-
-
 var figures = {
-	started:	chalk.green('\u25b6'),
+	running:	chalk.green('\u25b6'),
 	stopped:	chalk.red('\u25a0'),
-	error:		chalk.red('!')
+	error:		chalk.red('!'),
+	bar:        chalk.green('█')
 };
 
-
-
-
-
-function start (trackers, name) {
-	if (!name) {
-		process.stderr.write('Missing `name` argument.');
-		return process.exit(1);
-	}
-
-	var tracker = trackers[name];
-	var output = [
-		figures.started,
-		chalk.underline(name)
-	];
-
-	if (tracker) {
-		if (!tracker.started) {
-			tracker.started = Date.now();
-			output.push(chalk.gray('resumed'));
-		} else output.push(chalk.gray('already running'));
-	} else {
-		tracker = trackers[name] = {
-			name:		name,
-			started:	Date.now(),
-			value:		0,
-		};
-		output.push(chalk.gray('started'));
-	};
-
-	if (!argv.silent) {
-		if (argv.porcelain) process.stdout.write(JSON.stringify(tracker) + '\n');
-		else process.stdout.write(output.join(' ') + '\n');
-	}
+if (process.platform === 'win32') {
+	figures.running = '»';
 }
 
 
-
-
-
-function stop (trackers, name) {
-	if (!name) {
-		process.stderr.write('Missing `name` argument.');
-		return process.exit(1);
+function Trackers(trackers)
+{
+	this.trackers = [];
+	if (trackers !== undefined) {
+		trackers.forEach(function(tracker) {
+			this.trackers.push(new Tracker(tracker));
+		}, this);
 	}
+};
 
-	var tracker = trackers[name];
-	var output = [];
+Trackers.prototype = {
 
-	if (tracker) {
-		if (!tracker.started)
-			output.push(figures.error, chalk.underline(tracker.name), chalk.gray('isn\'t started'));
-		else {
-			var now = Date.now();
-			tracker.value += now - tracker.started;
-			tracker.started = false;
-			output.push(figures.stopped, chalk.underline(tracker.name), chalk.gray('stopped'));
+	/**
+	 * Get tracker by name.
+	 *
+	 * @param  {string} name
+	 * @return {Tracker|undefined}
+	 */
+	getName: function(name) {
+		var tracker;
+		for (var i in this.trackers) {
+			tracker = this.trackers[i];
+			if (tracker.name == name) {
+				return tracker;
+			}
 		}
-	} else output.push(figures.error, chalk.underline(name), chalk.gray('doesn\'t exist'));
+	},
 
-	if (!argv.silent) {
-		if (argv.porcelain) process.stdout.write(JSON.stringify(tracker) + '\n');
-		else process.stdout.write(output.join(' ') + '\n');
+	/**
+	 * Calculate the precentage of time this tracker took to run.
+	 *
+	 * @param  {Tracker} tracker
+	 * @return {integer}
+	 */
+	calculatePercentage: function(tracker) {
+		return Math.round(tracker.timeTaken() / this.getTotalTime() * 100, 0);
+	},
+
+	/**
+	 * Get the total amount of time taken for all trackers.
+	 *
+	 * @return {integer}
+	 */
+	getTotalTime: function() {
+		var total = 0;
+		this.trackers.forEach(function(tracker) {
+			total += tracker.timeTaken();
+		});
+		return total;
+	},
+
+	/**
+	 * Start tracker name.
+	 *
+	 * @param  {string} name
+	 * @return {Tracker}
+	 */
+	start: function(name) {
+
+		var tracker = this.getName(name);
+		var output = [
+			figures.running,
+			chalk.underline(name)
+		];
+
+		if (!tracker) {
+			tracker = new Tracker({ name: name });
+			tracker.start();
+			this.trackers.push(tracker);
+			output.push(chalk.gray('started'));
+		} else if (tracker.isRunning()) {
+			output.push(chalk.gray('already running'));
+		} else {
+			tracker.start();
+			output.push(chalk.gray('resumed'));
+		}
+
+		if (!program.silent) {
+			if (program.porcelain) process.stdout.write(JSON.stringify(tracker) + '\n');
+			else process.stdout.write(output.join(' ') + '\n');
+		}
+
+		writeFile();
+	},
+
+	/**
+	 * Stop tracker name.
+	 *
+	 * @param  {string} name
+	 * @return {void}
+	 */
+	stop: function(name) {
+
+		var tracker = this.getName(name);
+		var output = [];
+
+		if (tracker) {
+			if (!tracker.isRunning())
+				output.push(figures.error, chalk.underline(tracker.name), chalk.gray('isn\'t started'));
+			else {
+				tracker.stop();
+				output.push(figures.stopped, chalk.underline(tracker.name), chalk.gray('stopped'));
+			}
+		} else output.push(figures.error, chalk.underline(name), chalk.gray('doesn\'t exist'));
+
+		if (!program.silent) {
+			if (program.porcelain) process.stdout.write(tracker.toString() + '\n');
+			else process.stdout.write(output.join(' ') + '\n');
+		}
+
+		writeFile();
+	},
+
+	/**
+	 * Add time onto given tracker name.
+	 *
+	 * @param {string} name
+	 * @param {integer} amount
+	 */
+	add: function(name, amount) {
+
+		var tracker = this.getName(name);
+		var output = [];
+
+		if (tracker) {
+			tracker.addTime(amount);
+			output.push(chalk.gray('added'));
+			output.push(chalk.cyan(ms(ms(amount))));
+			output.push(chalk.gray('to'));
+			output.push(chalk.underline(tracker.name));
+		} else output.push(figures.error, chalk.underline(name), chalk.gray('doesn\'t exist'));
+
+		if (!program.silent) {
+			if (program.porcelain) process.stdout.write(tracker.toString() + '\n');
+			else process.stdout.write(output.join(' ') + '\n');
+		}
+
+		writeFile();
+	},
+
+	/**
+	 * Subtract time onto given tracker name.
+	 *
+	 * @param  {string} name
+	 * @param  {integer} amount
+	 * @return {void}
+	 */
+	subtract: function(name, amount) {
+		
+		var tracker = this.getName(name);
+		var output = [];
+
+		if (tracker) {
+			tracker.subTime(amount);
+			output.push(chalk.gray('subtracted'));
+			output.push(chalk.cyan(ms(ms(amount))));
+			output.push(chalk.gray('from'));
+			output.push(chalk.underline(tracker.name));
+		} else output.push(figures.error, chalk.underline(name), chalk.gray('doesn\'t exist'));
+
+		if (!program.silent) {
+			if (program.porcelain) process.stdout.write(JSON.stringify(tracker) + '\n');
+			else process.stdout.write(output.join(' ') + '\n');
+		}
+
+		writeFile();
+	},
+
+	/**
+	 * Render status of given tracker name.
+	 *
+	 * @param  {string} name
+	 * @return {void}
+	 */
+	renderName: function(name) {
+		var tracker = this.getName(name);
+		var output = [];
+
+		if (program.porcelain) {
+			output.push(tracker ? tracker.toString() : '{}');
+		} else if (!tracker) {
+			output.push(figures.error, chalk.underline(name), chalk.gray('doesn\'t exist'));
+		} else {
+
+			output.push(lPad(chalk.underline(name), 25), '');
+			var timeTaken = tracker.timeTaken();
+			output.push(rPad(chalk.cyan(ms(timeTaken)), 15));
+
+			var percentage = trackers.calculatePercentage(tracker);
+			var maxBarWidth = 20;
+			var barLength = Math.ceil(maxBarWidth * percentage / 100) + 1;
+			var bars = new Array(barLength).join(figures.bar);
+			output.push(bars, percentage + '%');
+
+			if (tracker.isRunning()) {
+				output.push('', figures.running, ms(timeTaken));
+			}
+		}
+
+		process.stdout.write(output.join(' ') + '\n');
+	},
+
+	/**
+	 * Render the status of all the trackers.
+	 *
+	 * @return {void}
+	 */
+	render: function () {
+		if (this.trackers.length === 0) {
+			process.stdout.write(chalk.gray('no trackers\n'));
+			return;
+		}
+		this.trackers.forEach(function(tracker) {
+			this.renderName(tracker.name);
+		}, this);
+	},
+
+	/**
+	 * Convert trackers to json for storing.
+	 *
+	 * @return {string}
+	 */
+	toString: function() {
+		return JSON.stringify(this.trackers);
+	}
+
+};
+
+function Tracker(tracker)
+{
+	this.name = tracker.name;
+	this.startTime = tracker.startTime;
+	this.endTime = tracker.endTime;
+};
+
+Tracker.prototype = {
+	
+	/**
+	 * Start tracking time.
+	 *
+	 * @return {void}
+	 */
+	start: function() {
+		if (this.startTime === undefined) {
+			this.startTime = Date.now();
+		} else {
+			this.endTime = undefined;
+		}
+	},
+
+	/**
+	 * End tracking time.
+	 *
+	 * @return {void}
+	 */
+	stop: function() {
+		this.endTime = Date.now();
+	},
+
+	/**
+	 * Add time.
+	 *
+	 * @param {integer} amount
+	 * @return {void}
+	 */
+	addTime: function(amount) {
+		this.endTime += amount;
+	},
+
+	/**
+	 * Subtract time.
+	 *
+	 * @param  {integer} amount
+	 * @return {void}
+	 */
+	subTime: function(amount) {
+		this.endTime -= amount;
+	},
+
+	/**
+	 * Get time taken.
+	 *
+	 * @return {integer}
+	 */
+	timeTaken: function() {
+		var endTime = this.endTime;
+		if (this.endTime === undefined) {
+			endTime = Date.now();
+		}
+		return endTime - this.startTime;
+	},
+
+	/**
+	 * Determine if tracker is running.
+	 *
+	 * @return {boolean}
+	 */
+	isRunning: function() {
+		return this.endTime === undefined;
+	},
+
+	/**
+	 * Serialize tracker.
+	 *
+	 * @return {object}
+	 */
+	serialize: function() {
+		return {
+			name: this.name,
+			start: this.startTime,
+			end: this.endTime,
+			time: this.timeTaken()
+		};
+	},
+
+	/**
+	 * Convert tracker to string.
+	 *
+	 * @return {string}
+	 */
+	toString: function() {
+		return JSON.stringify(this.serialize());
 	}
 }
 
-
-
-
-
-function add (trackers, name, amount) {
-	if (!name) {
-		process.stderr.write('Missing `name` argument.');
-		return process.exit(1);
-	}
-	if (!amount) {
-		process.stderr.write('Missing `amount` argument.');
-		return process.exit(1);
-	}
-
-	var tracker = trackers[name];
-	var output = [];
-
-	if (tracker) {
-		tracker.value += ms(amount);
-		output.push(chalk.gray('added'));
-		output.push(chalk.cyan(ms(ms(amount))));
-		output.push(chalk.gray('to'));
-		output.push(chalk.underline(tracker.name));
-	} else output.push(figures.error, chalk.underline(name), chalk.gray('doesn\'t exist'));
-
-	if (!argv.silent) {
-		if (argv.porcelain) process.stdout.write(JSON.stringify(tracker) + '\n');
-		else process.stdout.write(output.join(' ') + '\n');
-	}
-}
-
-
-
-
-
-function subtract (trackers, name, amount) {
-	if (!name) {
-		process.stderr.write('Missing `name` argument.');
-		return process.exit(1);
-	}
-	if (!amount) {
-		process.stderr.write('Missing `amount` argument.');
-		return process.exit(1);
-	}
-
-	var tracker = trackers[name];
-	var output = [];
-
-	if (tracker) {
-		tracker.value -= ms(amount);
-		output.push(chalk.gray('subtracted'));
-		output.push(chalk.cyan(ms(ms(amount))));
-		output.push(chalk.gray('from'));
-		output.push(chalk.underline(tracker.name));
-	} else output.push(figures.error, chalk.underline(name), chalk.gray('doesn\'t exist'));
-
-	if (!argv.silent) {
-		if (argv.porcelain) process.stdout.write(JSON.stringify(tracker) + '\n');
-		else process.stdout.write(output.join(' ') + '\n');
-	}
-}
-
-
-
-
-
-function status (trackers, name) {
-	if (!name) {
-		process.stderr.write('Missing `name` argument.');
-		return process.exit(1);
-	}
-
-	if (argv.silent) return;
-
-	var tracker = trackers[name];
-	var output = [];
-
-	if (tracker) {
-		if (argv.porcelain)
-			return process.stdout.write(JSON.stringify(tracker) + '\n');
-
-		output.push(lPad(chalk.underline(name), 25), '');
-		var v = tracker.value;
-		var d = tracker.started ? Date.now() - tracker.started : 0;
-		output.push(rPad(chalk.cyan(ms(v + d)), 15));
-		if (tracker.started)
-			output.push('', figures.started, ms(d));
-
-	} else {
+function writeFile() {
+	try {
+		fs.writeFileSync(file, trackers.toString());
+	} catch (err) {
+		process.stderr.write(err.message);
 		process.exit(1);
-		if (argv.porcelain) return process.stdout.write('{}' + '\n');
-
-		output.push(figures.error, chalk.underline(name), chalk.gray('doesn\'t exist'));
-
-	};
-	process.stdout.write(output.join(' ') + '\n');
-}
-
-
-
-function statusAll (trackers) {
-	if (argv.silent) return;
-	var count = 0;
-	for (name in trackers) {
-		count++;
-		status(trackers, name);
 	}
-	if (count === 0) process.stdout.write(chalk.gray('no trackers\n'));
 }
-
-
-
-
-
-function help () {
-	process.stdout.write([
-		chalk.yellow('track start <name>'),
-		chalk.yellow('track - <name>'),
-		'  Start a new or resume an existing tracker. `name` must be a valid JSON key.',
-		chalk.yellow('track stop <name>'),
-		chalk.yellow('track . <name>'),
-		'  Stop an existing tracker.',
-		'',
-		chalk.yellow('track add <name> <amount>'),
-		chalk.yellow('track + <name> <amount>'),
-		'  Add any amount of time to an existing tracker.',
-		chalk.yellow('track subtract <name> <amount>'),
-		chalk.yellow('track - <name> <amount>'),
-		'  Subtract any amount of time from an existing tracker.',
-		'',
-		chalk.yellow('track status <name>'),
-		chalk.yellow('track s <name>'),
-		'  Show the status of a tracker.',
-		chalk.yellow('track status'),
-		chalk.yellow('track s'),
-		'  Show the status of all active trackers.',
-		'',
-		chalk.yellow('Options:'),
-		'  -s, --silent		No output',
-		'  -p, --porcelain	Machine-readable output.',
-	].join('\n') + '\n');
-	return process.exit(1);
-}
-
-
-
-
-
-var argv = yargs.argv;
-
-argv.silent = argv.silent || argv.s || false;
-argv.porcelain = argv.porcelain || argv.p || false;
-
-
 
 var dir = path.join(home, 'time-tracking');
 try {
@@ -255,35 +372,75 @@ try {
 }
 
 var file = path.join(dir, 'trackers.json');
-try {
-	var trackers = fs.readFileSync(file);
-	try { trackers = JSON.parse(trackers); }
+if (fs.existsSync(file)) {
+	var trackersObj = [];
+	try {
+		var trackersObj = JSON.parse(fs.readFileSync(file));
+	}
 	catch (err) {
 		process.stderr.write('Cannot parse ' + file + '.');
 		process.exit(1);
 	}
-} catch (err) { trackers = {}; }
-
-
-
-if (argv._[0] === 'start' || argv._[0] === '-') start(trackers, argv._[1]);
-else if (argv._[0] === 'stop' || argv._[0] === '.') stop(trackers, argv._[1]);
-else if (argv._[0] === 'add' || argv._[0] === '+') add(trackers, argv._[1], argv._[2]);
-else if (argv._[0] === 'subtract' || argv._[0] === '-') subtract(trackers, argv._[1], argv._[2]);
-else if (argv._[0] === 'status' || argv._[0] === 's') {
-	if (argv._[1]) status(trackers, argv._[1]);
-	else statusAll(trackers);
-} else if (argv.help || argv.h) help();
-else {
-	process.stdout.write('Invalid command.' + '\n');
-	process.exit(1);
 }
+trackers = new Trackers(trackersObj);
 
+program
+	.usage('Usage: <command> [options]')
+	.version(require('../package').version)
+	.option('-s --silent', 'No output')
+	.option('-p --porcelain', 'Machine-readable output.')
 
+program
+	.command('start <name>')
+	.option('--name [name]', 'Name of tracker')
+	.description('Start a new or resume an existing tracker.')
+	.action(function(name) {
+		trackers.start(name);
+	});
 
-try {
-	fs.writeFileSync(file, JSON.stringify(trackers));
-} catch (err) {
-	process.stderr.write(err.message);
-	process.exit(1);
+program
+	.command('stop <name>')
+	.option('--name [name]', 'Name of tracker')
+	.description('Stop existing tracker.')
+	.action(function(name) {
+		trackers.stop(name);
+	});
+
+program
+	.command('add <amount> <name>')
+	.option('--name [name]', 'Name of tracker')
+	.description('Add amount of time to an existing tracker.')
+	.alias('+')
+	.action(function(amount, name) {
+		trackers.add(name || process.args[2], amount);
+	});
+
+program
+	.command('subtract <amount> <name>')
+	.option('--name [name]', 'Name of tracker')
+	.description('Subtract amount of time from an existing tracker.')
+	.alias('-')
+	.action(function(amount, name) {
+		trackers.subtract(name || process.args[2], amount);
+	});
+
+program
+	.command('status [name]')
+	.option('--name [name]', 'Name of tracker')
+	.description('Show the status of all or the spcified tracker.')
+	.alias('s')
+	.action(function(name) {
+		if (program.silent) return;
+
+		if (name) {
+			trackers.renderName(name);
+		} else {
+			trackers.render();
+		}
+	});
+
+program.parse(process.argv);
+
+if (program.args.length === 0) {
+	program.help();
 }
