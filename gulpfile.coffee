@@ -3,6 +3,7 @@ gutil		= require 'gulp-util'
 
 coffee		= require 'gulp-coffee'
 header		= require 'gulp-header'
+chmod		= require 'gulp-chmod'
 del			= require 'del'
 
 
@@ -25,6 +26,7 @@ gulp.task 'bin', () ->
 			"// #{pkg.name} #{pkg.version}"
 			''
 		].join '\n'
+        .pipe chmod 755   # make executable
 		.pipe gulp.dest './bin'
 
 
