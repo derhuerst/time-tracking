@@ -3,6 +3,7 @@ gutil		= require 'gulp-util'
 
 coffee		= require 'gulp-coffee'
 header		= require 'gulp-header'
+del			= require 'del'
 
 
 # package metadata
@@ -37,6 +38,15 @@ gulp.task 'src', () ->
 	gulp.src './src/*.coffee'
 		.pipe compiler
 		.pipe gulp.dest './src'
+
+
+
+
+gulp.task 'clean', () ->
+	del [
+		'bin/track.js'
+		'src/*.js'
+	]
 
 
 
