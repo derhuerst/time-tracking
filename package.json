@@ -26,7 +26,7 @@
 	"homepage": "https://github.com/derhuerst/time-tracking",
 	"repository": "git://github.com/derhuerst/time-tracking.git",
 	"bugs": "https://github.com/derhuerst/time-tracking/issues",
-	"license": "MIT",
+	"license": "ISC",
 	"dependencies": {
 		"yargs":			"^3.24.0",
 		"os-homedir":		"^1.0.1",
