@@ -1,9 +1,5 @@
 .DS_Store
 Thumbs.db
 
-bin/track.coffee
-src/*.coffee
-
 .editorconfig
 .gitignore
-gulpfile.coffee
