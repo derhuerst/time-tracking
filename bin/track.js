@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 'use strict'
 
-const chalk =   require('chalk')
-const lPad =    require('left-pad')
-const rPad =    require('right-pad')
-const ms =      require('ms')
-const yargs =   require('yargs')
-const Promise = require('bluebird')
+const chalk = require('chalk')
+const lPad =  require('left-pad')
+const rPad =  require('right-pad')
+const ms =    require('ms')
+const yargs = require('yargs')
+const co =    require('roads-coroutine')
 
-const track =   require('../src/index')()
+const track = require('../src/index')()
 
 
 
@@ -26,7 +26,7 @@ const showError = (err) => process.stderr.write([
 
 
 
-const start = Promise.coroutine(function* (name, options) {
+const start = co(function* (name, options) {
 	debugger
 	if (!options) options = {}
 	if (!name) {
@@ -49,7 +49,7 @@ const start = Promise.coroutine(function* (name, options) {
 
 
 
-const stop = Promise.coroutine(function* (name, options) {
+const stop = co(function* (name, options) {
 	debugger
 	if (!options) options = {}
 	if (!name) {
@@ -70,7 +70,7 @@ const stop = Promise.coroutine(function* (name, options) {
 
 
 
-const add = Promise.coroutine(function* (name, amount, options) {
+const add = co(function* (name, amount, options) {
 	debugger
 	if (!options) options = {}
 	if (!name) {
@@ -97,7 +97,7 @@ const add = Promise.coroutine(function* (name, amount, options) {
 
 
 
-const subtract = Promise.coroutine(function* (name, amount, options) {
+const subtract = co(function* (name, amount, options) {
 	debugger
 	if (!options) options = {}
 	if (!name) {
@@ -134,7 +134,7 @@ const statusOfTask = (tracker) => {
 	return output.join(' ')
 }
 
-const status = Promise.coroutine(function* (name, options) {
+const status = co(function* (name, options) {
 	debugger
 	if (!options) options = {}
 	let trackers = yield track.read(name)

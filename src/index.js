@@ -2,7 +2,7 @@
 
 const path =    require('path')
 const homedir = require('os-homedir')
-const Promise = require('bluebird')
+const co =      require('roads-coroutine')
 const fs =      require('fs-promise')
 
 
@@ -13,7 +13,7 @@ const Track = Object.freeze({
 
 	file: path.join(homedir(), 'time-tracking/trackers.json'),
 
-	read: Promise.coroutine(function* (name) {
+	read: co(function* (name) {
 		let dir = path.dirname(this.file)
 		let stats = yield fs.stat(dir)
 		if (!stats || !stats.isDirectory()) throw new Error(`${dir} is not a directory`)
@@ -29,7 +29,7 @@ const Track = Object.freeze({
 
 
 
-	start: Promise.coroutine(function* (name) {
+	start: co(function* (name) {
 		let now = Date.now()
 		let result = {}
 		let trackers = yield this.read()
@@ -49,7 +49,7 @@ const Track = Object.freeze({
 		return result
 	}),
 
-	stop: Promise.coroutine(function* (name) {
+	stop: co(function* (name) {
 		let now = Date.now()
 		let result = {}
 		let trackers = yield this.read()
@@ -65,7 +65,7 @@ const Track = Object.freeze({
 
 
 
-	add: Promise.coroutine(function* (name, amount) {
+	add: co(function* (name, amount) {
 		debugger
 		let now = Date.now()
 		let trackers = yield this.read()
