@@ -4,6 +4,7 @@ const path =    require('path')
 const homedir = require('os-homedir')
 const so =      require('so')
 const fs =      require('fs-promise')
+const mkdirp =  require('mkdirp-then')
 
 
 
@@ -13,11 +14,19 @@ const Track = Object.freeze({
 
 	file: path.join(homedir(), 'time-tracking/trackers.json'),
 
-		let dir = path.dirname(this.file)
-		let stats = yield fs.stat(dir)
+	init: so(function* (name) {
+		let dir = path.dirname(this.file), stats
+		try { stats = yield fs.stat(dir) }
+		catch (e) { return yield mkdirp(dir) }
 		if (!stats || !stats.isDirectory()) throw new Error(`${dir} is not a directory`)
-		let trackers = JSON.parse(yield fs.readFile(this.file))
+	}),
+
 	read: so(function* (name) {
+		yield this.init()
+		let trackers
+		try { trackers = JSON.parse(yield fs.readFile(this.file)) }
+		catch (e) { trackers = {} }
+
 		if (!name) return trackers
 		if (trackers[name]) return trackers[name]
 		throw new Error(`${name} doesn't exist.`)

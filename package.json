@@ -25,6 +25,7 @@
 		"so":          "^1.0.1",
 		"os-homedir":  "^1.0.1",
 		"fs-promise":  "^0.3.1",
+		"mkdirp-then": "^1.1.1"
 	},
 	"scripts": {
 		"track":    "./bin/track.js"
