@@ -26,7 +26,6 @@ const showError = (err) => process.stderr.write([
 
 
 
-	debugger
 const start = so(function* (name, options) {
 	if (!options) options = {}
 	if (!name) {
@@ -49,7 +48,6 @@ const start = so(function* (name, options) {
 
 
 
-	debugger
 const stop = so(function* (name, options) {
 	if (!options) options = {}
 	if (!name) {
@@ -70,7 +68,6 @@ const stop = so(function* (name, options) {
 
 
 
-	debugger
 const add = so(function* (name, amount, options) {
 	if (!options) options = {}
 	if (!name) {
@@ -97,7 +94,6 @@ const add = so(function* (name, amount, options) {
 
 
 
-	debugger
 const subtract = so(function* (name, amount, options) {
 	if (!options) options = {}
 	if (!name) {
@@ -134,7 +130,6 @@ const statusOfTask = (tracker) => {
 	return output.join(' ')
 }
 
-	debugger
 const status = so(function* (name, options) {
 	if (!options) options = {}
 	let trackers = yield track.read(name)
@@ -185,7 +180,6 @@ const options = {
 	porcelain: argv.porcelain || argv.p || false
 }
 
-debugger
 switch (argv._[0]) {
 	case 'start':
 	case '-':
@@ -213,4 +207,3 @@ switch (argv._[0]) {
 		break
 }
 // end
-debugger

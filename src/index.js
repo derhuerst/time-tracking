@@ -65,13 +65,11 @@ const Track = Object.freeze({
 
 
 
-		debugger
 	add: so(function* (name, amount) {
 		let now = Date.now()
 		let trackers = yield this.read()
 		if (!trackers[name]) throw new Error(`${name} doesn't exist.`)
 		trackers[name].value += amount
-		console.log('trackers', trackers)
 		yield this._write(trackers)
 		return null
 	})

@@ -17,15 +17,14 @@
 		"cli", "command line", "terminal", "tool"
 	],
 	"dependencies": {
-		"yargs":       "^3.32.0",
-		"os-homedir":  "^1.0.1",
 		"chalk":       "^1.1.1",
 		"left-pad":    "^0.0.4",
 		"right-pad":   "^0.0.1",
 		"ms":          "^0.7.1",
+		"yargs":       "^3.32",
 		"so":          "^1.0.1",
+		"os-homedir":  "^1.0.1",
 		"fs-promise":  "^0.3.1",
-		"os-homedir":  "^1.0.1"
 	},
 	"scripts": {
 		"track":    "./bin/track.js"
