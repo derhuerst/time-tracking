@@ -2,7 +2,7 @@
 
 const path =    require('path')
 const homedir = require('os-homedir')
-const co =      require('roads-coroutine')
+const so =      require('so')
 const fs =      require('fs-promise')
 
 
@@ -13,11 +13,11 @@ const Track = Object.freeze({
 
 	file: path.join(homedir(), 'time-tracking/trackers.json'),
 
-	read: co(function* (name) {
 		let dir = path.dirname(this.file)
 		let stats = yield fs.stat(dir)
 		if (!stats || !stats.isDirectory()) throw new Error(`${dir} is not a directory`)
 		let trackers = JSON.parse(yield fs.readFile(this.file))
+	read: so(function* (name) {
 		if (!name) return trackers
 		if (trackers[name]) return trackers[name]
 		throw new Error(`${name} doesn't exist.`)
@@ -29,7 +29,7 @@ const Track = Object.freeze({
 
 
 
-	start: co(function* (name) {
+	start: so(function* (name) {
 		let now = Date.now()
 		let result = {}
 		let trackers = yield this.read()
@@ -49,7 +49,7 @@ const Track = Object.freeze({
 		return result
 	}),
 
-	stop: co(function* (name) {
+	stop: so(function* (name) {
 		let now = Date.now()
 		let result = {}
 		let trackers = yield this.read()
@@ -65,8 +65,8 @@ const Track = Object.freeze({
 
 
 
-	add: co(function* (name, amount) {
 		debugger
+	add: so(function* (name, amount) {
 		let now = Date.now()
 		let trackers = yield this.read()
 		if (!trackers[name]) throw new Error(`${name} doesn't exist.`)

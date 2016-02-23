@@ -8,6 +8,7 @@
 	"bugs":         "https://github.com/derhuerst/time-tracking/issues",
 	"license":      "ISC",
 	"preferGlobal": true,
+	"engines" :     {"node": ">=5"},
 	"bin": {
 		"track":    "./bin/track.js"
 	},
@@ -22,9 +23,9 @@
 		"left-pad":    "^0.0.4",
 		"right-pad":   "^0.0.1",
 		"ms":          "^0.7.1",
+		"so":          "^1.0.1",
 		"fs-promise":  "^0.3.1",
 		"os-homedir":  "^1.0.1"
-		"roads-coroutine": "Dashron/roads-coroutine",
 	},
 	"scripts": {
 		"track":    "./bin/track.js"

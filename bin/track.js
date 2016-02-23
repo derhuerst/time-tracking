@@ -6,7 +6,7 @@ const lPad =  require('left-pad')
 const rPad =  require('right-pad')
 const ms =    require('ms')
 const yargs = require('yargs')
-const co =    require('roads-coroutine')
+const so =    require('so')
 
 const track = require('../src/index')()
 
@@ -26,8 +26,8 @@ const showError = (err) => process.stderr.write([
 
 
 
-const start = co(function* (name, options) {
 	debugger
+const start = so(function* (name, options) {
 	if (!options) options = {}
 	if (!name) {
 		process.stderr.write('Missing `name` argument.')
@@ -49,8 +49,8 @@ const start = co(function* (name, options) {
 
 
 
-const stop = co(function* (name, options) {
 	debugger
+const stop = so(function* (name, options) {
 	if (!options) options = {}
 	if (!name) {
 		process.stderr.write('Missing `name` argument.')
@@ -70,8 +70,8 @@ const stop = co(function* (name, options) {
 
 
 
-const add = co(function* (name, amount, options) {
 	debugger
+const add = so(function* (name, amount, options) {
 	if (!options) options = {}
 	if (!name) {
 		process.stderr.write('Missing `name` argument.')
@@ -97,8 +97,8 @@ const add = co(function* (name, amount, options) {
 
 
 
-const subtract = co(function* (name, amount, options) {
 	debugger
+const subtract = so(function* (name, amount, options) {
 	if (!options) options = {}
 	if (!name) {
 		process.stderr.write('Missing `name` argument.')
@@ -134,8 +134,8 @@ const statusOfTask = (tracker) => {
 	return output.join(' ')
 }
 
-const status = co(function* (name, options) {
 	debugger
+const status = so(function* (name, options) {
 	if (!options) options = {}
 	let trackers = yield track.read(name)
 	if (trackers instanceof Error) return showError(trackers)
