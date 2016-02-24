@@ -148,10 +148,10 @@ const status = so(function* (name, options) {
 
 const help = [
 	chalk.yellow('track start <name>'),
-	chalk.yellow('track - <name>'),
+	chalk.yellow('track 1 <name>'),
 	'  Start a new or resume an existing tracker. `name` must be a valid JSON key.',
 	chalk.yellow('track stop <name>'),
-	chalk.yellow('track . <name>'),
+	chalk.yellow('track 0 <name>'),
 	'  Stop an existing tracker.',
 	'',
 	chalk.yellow('track add <name> <amount>'),
@@ -169,7 +169,7 @@ const help = [
 	'  Show the status of all active trackers.',
 	'',
 	chalk.yellow('Options:'),
-	'  -s, --silent   No output',
+	'  -s, --silent     No output',
 	'  -p, --porcelain  Machine-readable output.'
 ].join('\n') + '\n'
 
@@ -181,11 +181,11 @@ const options = {
 
 switch (argv._[0]) {
 	case 'start':
-	case '-':
+	case 1:
 		start(argv._[1], options)
 		break
 	case 'stop':
-	case '.':
+	case 0:
 		stop(argv._[1], options)
 		break
 	case 'add':
