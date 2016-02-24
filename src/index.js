@@ -29,7 +29,7 @@ const Track = Object.freeze({
 
 		if (!name) return trackers
 		if (trackers[name]) return trackers[name]
-		throw new Error(`${name} doesn't exist.`)
+		return new Error(`${name} doesn't exist.`)
 	}),
 
 	_write: function (trackers) {
@@ -62,7 +62,7 @@ const Track = Object.freeze({
 		let now = Date.now()
 		let result = {}
 		let trackers = yield this.read()
-		if (!trackers[name]) throw new Error(`${name} doesn't exist.`)
+		if (!trackers[name]) return new Error(`${name} doesn't exist.`)
 		if(trackers[name].started) {
 			result.wasRunning = true
 			trackers[name].value += now - trackers[name].started
@@ -77,11 +77,15 @@ const Track = Object.freeze({
 	add: so(function* (name, amount) {
 		let now = Date.now()
 		let trackers = yield this.read()
-		if (!trackers[name]) throw new Error(`${name} doesn't exist.`)
+		if (!trackers[name]) return new Error(`${name} doesn't exist.`)
 		trackers[name].value += amount
 		yield this._write(trackers)
 		return null
-	})
+	}),
+
+	subtract: function (name, amount) {
+		return this.add(name, -amount)
+	}
 
 })
 

@@ -55,7 +55,7 @@ const stop = so(function* (name, options) {
 		return process.exit(1)
 	}
 
-	return track.stop(name)
+	let result = track.stop(name)
 	if (result instanceof Error) return showError(result)
 	if (options.silent) return
 
@@ -106,7 +106,7 @@ const subtract = so(function* (name, amount, options) {
 	}
 
 	amount = ms(amount)
-	track.subtract(name, amount)
+	let result = yield track.subtract(name, amount)
 	if (result instanceof Error) return showError(result)
 	if (options.silent) return
 
@@ -120,7 +120,7 @@ const subtract = so(function* (name, amount, options) {
 
 
 
-const statusOfTask = (tracker) => {
+const statusOfTracker = (tracker) => {
 	let elapsed = tracker.started ? Date.now() - tracker.started : 0
 	let output = [
 		lPad(chalk.underline(tracker.name), 25),
@@ -136,13 +136,12 @@ const status = so(function* (name, options) {
 	if (trackers instanceof Error) return showError(trackers)
 	if (options.silent) return
 
-	if (Object.keys(trackers).length === 0) {
+	if (name) process.stdout.write(statusOfTracker(trackers) + '\n')
+	else if (Object.keys(trackers).length === 0)
 		process.stdout.write(chalk.gray('no trackers\n'))
-		return process.exit(1)
-	}
-
-	for (name in trackers)
-		process.stdout.write(statusOfTask(trackers[name]) + '\n')
+	else process.stdout.write(Object.keys(trackers)
+		.map((name) => statusOfTracker(trackers[name]))
+		.join('\n') + '\n')
 })
 
 
