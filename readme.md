@@ -2,7 +2,7 @@
 
 Minimalistic command line time tracking.
 
-[![asciicast](https://asciinema.org/a/28152.png)](https://asciinema.org/a/28152)
+[![asciicast](https://asciinema.org/a/27ca4bx7cdr0mu453bw5grwr7.png)](https://asciinema.org/a/27ca4bx7cdr0mu453bw5grwr7)
 
 [![npm version](https://img.shields.io/npm/v/time-tracking.svg)](https://www.npmjs.com/package/time-tracking)
 [![dependency status](https://img.shields.io/david/derhuerst/time-tracking.svg)](https://david-dm.org/derhuerst/time-tracking)
