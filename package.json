@@ -21,10 +21,10 @@
 		"left-pad":    "^0.0.4",
 		"right-pad":   "^0.0.1",
 		"ms":          "^0.7.1",
-		"yargs":       "^3.32",
+		"yargs":       "^4.2",
 		"so":          "^1.0.1",
 		"os-homedir":  "^1.0.1",
-		"fs-promise":  "^0.3.1",
+		"fs-promise":  "^0.4.1",
 		"mkdirp-then": "^1.1.1"
 	},
 	"scripts": {
