@@ -1,27 +1,28 @@
 #!/usr/bin/env node
 'use strict'
 
-const chalk = require('chalk')
-const lPad =  require('left-pad')
-const rPad =  require('right-pad')
-const ms =    require('ms')
-const yargs = require('yargs')
-const so =    require('so')
+const chalk =   require('chalk')
+const figures = require('figures')
+const lPad =    require('left-pad')
+const rPad =    require('right-pad')
+const ms =      require('ms')
+const yargs =   require('yargs')
+const so =      require('so')
 
-const track = require('../src/index')()
-
-
-
+const track =   require('../src/index')()
 
 
-const figures = {
-	started:  chalk.green('\u25b6'),
-	stopped:  chalk.red('\u25a0'),
+
+
+
+const symbols = {
+	started:  chalk.green(figures.pointer),
+	stopped:  chalk.red(figures.squareSmallFilled),
 	error:    chalk.red('!')
 }
 
 const showError = (err) => process.stderr.write([
-	figures.error, err.message
+	symbols.error, err.message
 ].join(' ') + '\n')
 
 
@@ -38,7 +39,7 @@ const start = so(function* (name, options) {
 	if (options.silent) return
 
 	process.stdout.write([
-		figures.started,
+		symbols.started,
 		chalk.underline(name),
 		chalk.gray(result.isNew ? 'started' :
 			(result.wasRunning ? 'already running' : 'resumed')
@@ -60,7 +61,7 @@ const stop = so(function* (name, options) {
 	if (options.silent) return
 
 	process.stdout.write([
-		figures.stopped,
+		symbols.stopped,
 		chalk.underline(name),
 		chalk.gray('stopped')
 	].join(' ') + '\n')
@@ -126,7 +127,7 @@ const statusOfTracker = (tracker) => {
 		lPad(chalk.underline(tracker.name), 25),
 		rPad(chalk.cyan(ms(tracker.value + elapsed)), 15)
 	]
-	if (tracker.started) output.push(figures.started, ms(elapsed))
+	if (tracker.started) output.push(symbols.started, ms(elapsed))
 	return output.join(' ')
 }
 
