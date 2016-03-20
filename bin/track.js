@@ -34,8 +34,9 @@ const start = so(function* (name, options) {
 		return process.exit(1)
 	}
 
-	let result = yield track.start(name)
-	if (result instanceof Error) return showError(result)
+	let result
+	try { result = yield track.start(name) }
+	catch (err) { return showError(err) }
 	if (options.silent) return
 
 	process.stdout.write([
@@ -56,8 +57,9 @@ const stop = so(function* (name, options) {
 		return process.exit(1)
 	}
 
-	let result = track.stop(name)
-	if (result instanceof Error) return showError(result)
+	let result
+	try { result = track.stop(name) }
+	catch (err) { return showError(err) }
 	if (options.silent) return
 
 	process.stdout.write([
@@ -81,8 +83,9 @@ const add = so(function* (name, amount, options) {
 	}
 	amount = ms(amount)
 
-	let result = yield track.add(name, amount)
-	if (result instanceof Error) return showError(result)
+	let result
+	try { result = yield track.add(name, amount) }
+	catch (err) { return showError(err) }
 	if (options.silent) return
 
 	process.stdout.write([
@@ -107,8 +110,9 @@ const subtract = so(function* (name, amount, options) {
 	}
 
 	amount = ms(amount)
-	let result = yield track.subtract(name, amount)
-	if (result instanceof Error) return showError(result)
+	let result
+	try { result = yield track.subtract(name, amount) }
+	catch (err) { return showError(err) }
 	if (options.silent) return
 
 	process.stdout.write([
@@ -133,8 +137,9 @@ const statusOfTracker = (tracker) => {
 
 const status = so(function* (name, options) {
 	if (!options) options = {}
-	let trackers = yield track.read(name)
-	if (trackers instanceof Error) return showError(trackers)
+	let trackers
+	try { trackers = yield track.read(name) }
+	catch (err) { return showError(err) }
 	if (options.silent) return
 
 	if (name) process.stdout.write(statusOfTracker(trackers) + '\n')
