@@ -16,6 +16,9 @@
 		"time", "tracking", "track", "tasks",
 		"cli", "command line", "terminal", "tool"
 	],
+	"directories": {
+		"bin":      "./bin"
+	},
 	"dependencies": {
 		"chalk":       "^1.1.1",
 		"figures":     "derhuerst/figures#play-symbol",
@@ -28,10 +31,16 @@
 		"fs-promise":  "^0.4.1",
 		"mkdirp-then": "^1.1.1"
 	},
-	"scripts": {
-		"track":    "./bin/track.js"
+	"devDependencies": {
+		"coffee-script":    "^1.10",
+		"nodeunit":         "^0.9.1",
+		"so":               "^1.0.1",
+		"is-roughly-equal": "^0.1",
+		"watchy":           "^0.6.6"
 	},
-	"directories": {
-		"bin":      "./bin"
+	"scripts": {
+		"test":          "nodeunit --reporter minimal test.coffee",
+		"test:watch":    "watchy -s -w . nodeunit --reporter minimal test.coffee",
+		"prepublish":    "npm test"
 	}
 }
