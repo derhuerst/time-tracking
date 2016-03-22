@@ -9,7 +9,7 @@ const ms =      require('ms')
 const yargs =   require('yargs')
 const so =      require('so')
 
-const track =   require('../src/index')()
+const track =   require('./index')()
 
 
 

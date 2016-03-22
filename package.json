@@ -1,35 +1,32 @@
 {
-	"name":         "time-tracking",
-	"description":  "Minimalistic command line time tracking.",
-	"version":      "0.3.0",
-	"author":       "Jannis R <mail@jannisr.de>",
-	"homepage":     "https://github.com/derhuerst/time-tracking",
-	"repository":   "git://github.com/derhuerst/time-tracking.git",
-	"bugs":         "https://github.com/derhuerst/time-tracking/issues",
-	"license":      "ISC",
-	"preferGlobal": true,
-	"engines" :     {"node": ">=5"},
-	"bin": {
-		"track":    "./bin/track.js"
-	},
+	"name":                 "time-tracking",
+	"description":          "Minimalistic command line time tracking.",
+	"version":              "0.3.0",
+	"main":                 "./index.js",
+	"files":                ["./index.js", "./track.js"],
+	"author":               "Jannis R <mail@jannisr.de>",
+	"homepage":             "https://github.com/derhuerst/time-tracking",
+	"repository":           "git://github.com/derhuerst/time-tracking.git",
+	"bugs":                 "https://github.com/derhuerst/time-tracking/issues",
+	"license":              "ISC",
+	"preferGlobal":         true,
+	"engines" :             {"node": ">=4"},
+	"bin":                  {"track": "./track.js"},
 	"keywords": [
 		"time", "tracking", "track", "tasks",
 		"cli", "command line", "terminal", "tool"
 	],
-	"directories": {
-		"bin":      "./bin"
-	},
 	"dependencies": {
-		"chalk":       "^1.1.1",
-		"figures":     "derhuerst/figures#play-symbol",
-		"left-pad":    "^0.0.4",
-		"right-pad":   "^0.0.1",
-		"ms":          "^0.7.1",
-		"yargs":       "^4.2",
-		"so":          "^1.0.1",
-		"os-homedir":  "^1.0.1",
-		"fs-promise":  "^0.4.1",
-		"mkdirp-then": "^1.1.1"
+		"chalk":            "^1.1.1",
+		"figures":          "derhuerst/figures#play-symbol",
+		"left-pad":         "^0.0.4",
+		"right-pad":        "^0.0.1",
+		"ms":               "^0.7.1",
+		"yargs":            "^4.2",
+		"so":               "^1.0.1",
+		"os-homedir":       "^1.0.1",
+		"fs-promise":       "^0.4.1",
+		"mkdirp-then":      "^1.1.1"
 	},
 	"devDependencies": {
 		"coffee-script":    "^1.10",
@@ -39,8 +36,8 @@
 		"watchy":           "^0.6.6"
 	},
 	"scripts": {
-		"test":          "nodeunit --reporter minimal test.coffee",
-		"test:watch":    "watchy -s -w . nodeunit --reporter minimal test.coffee",
-		"prepublish":    "npm test"
+		"test":             "nodeunit --reporter minimal test.coffee",
+		"test:watch":       "watchy -s -w . nodeunit --reporter minimal test.coffee",
+		"prepublish":       "npm test"
 	}
 }

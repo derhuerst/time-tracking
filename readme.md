@@ -1,4 +1,4 @@
-# *time-tracking*
+# *time-tracking* ⏱
 
 Minimalistic command line time tracking.
 

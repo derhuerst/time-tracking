@@ -7,7 +7,7 @@ isRoughlyEqual = require 'is-roughly-equal'
 assert =         require 'assert'
 
 
-track = require './src/index.js'
+track = require './index.js'
 
 
 
