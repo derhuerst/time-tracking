@@ -18,7 +18,7 @@
 	],
 	"dependencies": {
 		"chalk":       "^1.1.1",
-		"figures":     "^1.4",
+		"figures":     "derhuerst/figures#play-symbol",
 		"left-pad":    "^0.0.4",
 		"right-pad":   "^0.0.1",
 		"ms":          "^0.7.1",

@@ -16,7 +16,7 @@ const track =   require('../src/index')()
 
 
 const symbols = {
-	started:  chalk.green(figures.pointer),
+	started:  chalk.green(figures.play),
 	stopped:  chalk.red(figures.squareSmallFilled),
 	error:    chalk.red('!')
 }
