@@ -10,7 +10,7 @@ const mkdirp =  require('mkdirp-then')
 
 
 
-const Track = Object.freeze({
+const Track = {
 
 	file: path.join(homedir(), 'time-tracking/trackers.json'),
 
@@ -87,7 +87,7 @@ const Track = Object.freeze({
 		return this.add(name, -amount)
 	}
 
-})
+}
 
 
 
