@@ -2,10 +2,14 @@
 
 Minimalistic command line time tracking.
 
-[![asciicast](https://asciinema.org/a/27ca4bx7cdr0mu453bw5grwr7.png)](https://asciinema.org/a/27ca4bx7cdr0mu453bw5grwr7)
+[![asciicast](https://asciinema.org/a/40145.png)](https://asciinema.org/a/40145)
 
 [![npm version](https://img.shields.io/npm/v/time-tracking.svg)](https://www.npmjs.com/package/time-tracking)
+[![build status](https://img.shields.io/travis/derhuerst/time-tracking.svg)](https://travis-ci.org/derhuerst/time-tracking)
 [![dependency status](https://img.shields.io/david/derhuerst/time-tracking.svg)](https://david-dm.org/derhuerst/time-tracking)
+[![dev dependency status](https://img.shields.io/david/dev/derhuerst/time-tracking.svg)](https://david-dm.org/derhuerst/time-tracking#info=devDependencies)
+
+*time-tracking* [is ISC-licensed](license.md).
 
 
 
