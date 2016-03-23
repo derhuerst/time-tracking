@@ -3,8 +3,8 @@
 
 const chalk =   require('chalk')
 const figures = require('figures')
-const lPad =    require('left-pad')
-const rPad =    require('right-pad')
+const lPad =    require('pad-left')
+const rPad =    require('pad-right')
 const ms =      require('ms')
 const yargs =   require('yargs')
 const so =      require('so')
@@ -129,7 +129,7 @@ const statusOfTracker = (tracker) => {
 	let elapsed = tracker.started ? Date.now() - tracker.started : 0
 	let output = [
 		lPad(chalk.underline(tracker.name), 25),
-		rPad(chalk.cyan(ms(tracker.value + elapsed)), 15)
+		rPad(chalk.cyan(ms(tracker.value + elapsed)), 15, ' ')
 	]
 	if (tracker.started) output.push(symbols.started, ms(elapsed))
 	return output.join(' ')
