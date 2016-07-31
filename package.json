@@ -1,9 +1,9 @@
 {
 	"name":                 "time-tracking",
 	"description":          "Minimalistic command line time tracking.",
-	"version":              "0.4.1",
+	"version":              "0.4.2",
 	"main":                 "./index.js",
-	"files":                ["./index.js", "./track.js"],
+	"files":                ["index.js", "track.js"],
 	"author":               "Jannis R <mail@jannisr.de>",
 	"homepage":             "https://github.com/derhuerst/time-tracking",
 	"repository":           "git://github.com/derhuerst/time-tracking.git",
