@@ -131,7 +131,13 @@ const statusOfTracker = (tracker) => {
 		lPad(chalk.underline(tracker.name), 25),
 		rPad(chalk.cyan(ms(tracker.value + elapsed)), 15, ' ')
 	]
-	if (tracker.started) output.push(symbols.started, ms(elapsed))
+	if (tracker.started) {
+		const started = new Date(tracker.started)
+		output.push(symbols.started, ms(elapsed))
+		if (new Date().toDateString() !== started.toDateString())
+			output.push(chalk.gray(started.toLocaleDateString()))
+		output.push(chalk.gray(started.toLocaleTimeString()))
+	}
 	return output.join(' ')
 }
 
