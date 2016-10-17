@@ -21,9 +21,12 @@ const symbols = {
 	error:    chalk.red('!')
 }
 
-const showError = (err) => process.stderr.write([
-	symbols.error, err.message
-].join(' ') + '\n')
+const showError = (err) => {
+	process.stderr.write([
+		symbols.error, err.message
+	].join(' ') + '\n')
+	process.exit(1)
+}
 
 
 
@@ -218,7 +221,7 @@ switch (argv._[0]) {
 		break
 	default:
 		if (argv.help || argv.h) process.stdout.write(help)
-		else process.stderr.write('invalid command\n')
+		else showError(new Error('invalid command'))
 		break
 }
 // end
