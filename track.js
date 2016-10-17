@@ -148,12 +148,16 @@ const status = so(function* (name, options) {
 	catch (err) { return showError(err) }
 	if (options.silent) return
 
-	if (name) process.stdout.write(statusOfTracker(trackers) + '\n')
-	else if (Object.keys(trackers).length === 0)
-		process.stdout.write(chalk.gray('no trackers\n'))
-	else process.stdout.write(Object.keys(trackers)
-		.map((name) => statusOfTracker(trackers[name]))
-		.join('\n') + '\n')
+	if (options.porcelain)
+		process.stdout.write(JSON.stringify(trackers))
+	else {
+		if (name) process.stdout.write(statusOfTracker(trackers) + '\n')
+		else if (Object.keys(trackers).length === 0)
+			process.stdout.write(chalk.gray('no trackers\n'))
+		else process.stdout.write(Object.keys(trackers)
+			.map((name) => statusOfTracker(trackers[name]))
+			.join('\n') + '\n')
+	}
 })
 
 
@@ -179,10 +183,10 @@ const help = [
 	chalk.yellow('track status'),
 	chalk.yellow('track s'),
 	'  Show the status of all active trackers.',
+	'    -p, --porcelain   Machine-readable output.',
 	'',
 	chalk.yellow('Options:'),
-	'  -s, --silent     No output',
-	'  -p, --porcelain  Machine-readable output.'
+	'  -s, --silent   No output'
 ].join('\n') + '\n'
 
 const argv = yargs.argv
