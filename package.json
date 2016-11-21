@@ -1,8 +1,8 @@
 {
 	"name":                 "time-tracking",
 	"description":          "Minimalistic command line time tracking.",
-	"version":              "0.4.4",
-	"main":                 "./index.js",
+	"version":              "1.0.0",
+	"main":                 "index.js",
 	"files":                ["index.js", "track.js"],
 	"author":               "Jannis R <mail@jannisr.de>",
 	"homepage":             "https://github.com/derhuerst/time-tracking",
@@ -10,7 +10,7 @@
 	"bugs":                 "https://github.com/derhuerst/time-tracking/issues",
 	"license":              "ISC",
 	"preferGlobal":         true,
-	"engines" :             {"node": ">=4"},
+	"engines" :             {"node": ">=6"},
 	"bin":                  {"track": "./track.js"},
 	"keywords": [
 		"time", "tracking", "track", "tasks",
@@ -21,11 +21,11 @@
 		"figures":          "^2",
 		"pad-left":         "^2.1",
 		"pad-right":        "^0.2.2",
-		"ms":               "^0.7.1",
-		"yargs":            "^6.2",
+		"ms":               "^0.7.2",
+		"yargs":            "^6.4",
 		"so":               "^1.0.1",
 		"os-homedir":       "^1.0.2",
-		"fs-promise":       "^0.5",
+		"fs-promise":       "^1",
 		"mkdirp-then":      "^1.2"
 	},
 	"devDependencies": {
