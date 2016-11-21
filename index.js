@@ -58,14 +58,14 @@ const Track = {
 		return result
 	}),
 
-	stop: so(function* (name) {
+	stop: so(function* (name, apply = true) {
 		let now = Date.now()
 		let result = {}
 		let trackers = yield this.read()
 		if (!trackers[name]) throw new Error(`${name} doesn't exist.`)
 		if(trackers[name].started) {
 			result.wasRunning = true
-			trackers[name].value += now - trackers[name].started
+			if (apply) trackers[name].value += now - trackers[name].started
 			trackers[name].started = false
 		} else result.wasRunning = false
 		yield this._write(trackers)

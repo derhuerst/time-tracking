@@ -21,7 +21,7 @@ module.exports =
 		else cb()
 
 	'kitchen sink': (t) ->
-		t.expect 8
+		t.expect 9
 		tr = track tmp
 		so(->
 
@@ -38,9 +38,18 @@ module.exports =
 			t.ok equalBy500 trackers.foo.started, Date.now()
 
 			# stopping a tracker
+			oldFoo = (yield tr.read()).foo.value
+			yield tr.start 'foo'
 			yield tr.stop 'foo'
-			trackers = yield tr.read()
-			t.strictEqual trackers.foo.started, false
+			newFoo = (yield tr.read()).foo.value
+			t.notStrictEqual oldFoo, newFoo
+
+			# aborting a tracker
+			oldFoo = (yield tr.read()).foo.value
+			yield tr.start 'foo'
+			yield tr.stop 'foo', false
+			newFoo = (yield tr.read()).foo.value
+			t.strictEqual oldFoo, newFoo
 
 			# starting an existing tracker
 			yield tr.start 'foo'

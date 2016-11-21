@@ -53,7 +53,7 @@ const start = so(function* (name, options) {
 
 
 
-const stop = so(function* (name, options) {
+const stop = so(function* (name, options, apply = true) {
 	if (!options) options = {}
 	if (!name) {
 		process.stderr.write('Missing `name` argument.')
@@ -61,14 +61,14 @@ const stop = so(function* (name, options) {
 	}
 
 	let result
-	try { result = track.stop(name) }
+	try { result = track.stop(name, apply) }
 	catch (err) { return showError(err) }
 	if (options.silent) return
 
 	process.stdout.write([
 		symbols.stopped,
 		chalk.underline(name),
-		chalk.gray('stopped')
+		chalk.gray(apply ? 'stopped' : 'aborted')
 	].join(' ') + '\n')
 })
 
@@ -172,6 +172,8 @@ const help = [
 	chalk.yellow('track stop <name>'),
 	chalk.yellow('track 0 <name>'),
 	'  Stop an existing tracker.',
+	chalk.yellow('track abort <name>'),
+	'  Stop an existing tracker, discard the time it has been running for.',
 	'',
 	chalk.yellow('track add <name> <amount>'),
 	chalk.yellow('track + <name> <amount>'),
@@ -206,6 +208,9 @@ switch (argv._[0]) {
 	case 'stop':
 	case 0:
 		stop(argv._[1], options)
+		break
+	case 'abort':
+		stop(argv._[1], options, false)
 		break
 	case 'add':
 	case '+':
