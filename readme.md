@@ -8,6 +8,7 @@ Minimalistic command line time tracking.
 [![build status](https://img.shields.io/travis/derhuerst/time-tracking.svg)](https://travis-ci.org/derhuerst/time-tracking)
 [![dependency status](https://img.shields.io/david/derhuerst/time-tracking.svg)](https://david-dm.org/derhuerst/time-tracking)
 [![dev dependency status](https://img.shields.io/david/dev/derhuerst/time-tracking.svg)](https://david-dm.org/derhuerst/time-tracking#info=devDependencies)
+[![chat on gitter](https://badges.gitter.im/derhuerst.svg)](https://gitter.im/derhuerst)
 
 *time-tracking* [is ISC-licensed](license.md).
 

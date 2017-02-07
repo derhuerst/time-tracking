@@ -29,15 +29,13 @@
 		"mkdirp-then":      "^1.2"
 	},
 	"devDependencies": {
-		"coffee-script":    "^1.11.1",
-		"nodeunit":         "^0.10.2",
+		"tape-co": "^1.0.1",
 		"so":               "^1.0.1",
 		"is-roughly-equal": "^0.1",
 		"watchy":           "^0.6.6"
 	},
 	"scripts": {
-		"test":             "nodeunit --reporter minimal test.coffee",
-		"test:watch":       "watchy -s -w . nodeunit --reporter minimal test.coffee",
+		"test": "node test.js | tap-min",
 		"prepublish":       "npm test"
 	}
 }
