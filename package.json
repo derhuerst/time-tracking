@@ -32,7 +32,7 @@
 		"tape-co": "^1.0.1",
 		"so":               "^1.0.1",
 		"is-roughly-equal": "^0.1",
-		"watchy":           "^0.6.6"
+		"tap-min": "^1.2.1"
 	},
 	"scripts": {
 		"test": "node test.js | tap-min",
