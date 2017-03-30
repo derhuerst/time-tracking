@@ -2,17 +2,18 @@
 
 const test = require('tape-co').default
 const path = require('path')
-const fs = require('fs')
+const os = require('os')
+const shortid = require('shortid')
 const isRoughlyEqual = require('is-roughly-equal')
 
 const track = require('.')
 
-const tmp = path.join(__dirname, 'tmp.json')
+const tmp = () => path.join(os.tmpdir(), shortid.generate() + '.json')
 const equalBy500 = isRoughlyEqual(500)
 
 test('kitchen sink', function* (t) {
 	t.plan(9)
-	const tr = track(tmp)
+	const tr = track(tmp())
 
 	const trackers1 = yield tr.read()
 	t.equal(Object.keys(trackers1).length, 0)
