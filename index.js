@@ -1,7 +1,7 @@
 'use strict'
 
 const path =    require('path')
-const homedir = require('os-homedir')
+const os = require('os')
 const so =      require('so')
 const fs =      require('fs-promise')
 const mkdirp =  require('mkdirp-then')
@@ -12,7 +12,7 @@ const mkdirp =  require('mkdirp-then')
 
 const Track = {
 
-	file: path.join(homedir(), 'time-tracking/trackers.json'),
+	file: path.join(os.homedir(), 'time-tracking/trackers.json'),
 
 	init: so(function* (name) {
 		let dir = path.dirname(this.file), stats
