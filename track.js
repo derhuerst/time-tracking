@@ -7,7 +7,6 @@ const lPad =    require('pad-left')
 const rPad =    require('pad-right')
 const ms =      require('ms')
 const yargs =   require('yargs')
-const so =      require('so')
 
 const track =   require('./index')()
 
@@ -24,7 +23,7 @@ const showError = (err) => {
 	process.exit(1)
 }
 
-const start = so(function* (name, options) {
+const start = async (name, options) => {
 	if (!options) options = {}
 	if (!name) {
 		process.stderr.write('Missing `name` argument.')
@@ -32,7 +31,7 @@ const start = so(function* (name, options) {
 	}
 
 	let result
-	try { result = yield track.start(name) }
+	try { result = await track.start(name) }
 	catch (err) { return showError(err) }
 	if (options.silent) return
 
@@ -43,9 +42,9 @@ const start = so(function* (name, options) {
 			(result.wasRunning ? 'already running' : 'resumed')
 		)
 	].join(' ') + '\n')
-})
+}
 
-const stop = so(function* (name, options, apply = true) {
+const stop = async (name, options, apply = true) => {
 	if (!options) options = {}
 	if (!name) {
 		process.stderr.write('Missing `name` argument.')
@@ -62,9 +61,9 @@ const stop = so(function* (name, options, apply = true) {
 		chalk.underline(name),
 		chalk.gray(apply ? 'stopped' : 'aborted')
 	].join(' ') + '\n')
-})
+}
 
-const add = so(function* (name, amount, options) {
+const add = async (name, amount, options) => {
 	if (!options) options = {}
 	if (!name) {
 		process.stderr.write('Missing `name` argument.')
@@ -77,7 +76,7 @@ const add = so(function* (name, amount, options) {
 	amount = ms(amount)
 
 	let result
-	try { result = yield track.add(name, amount) }
+	try { result = await track.add(name, amount) }
 	catch (err) { return showError(err) }
 	if (options.silent) return
 
@@ -87,9 +86,9 @@ const add = so(function* (name, amount, options) {
 		chalk.gray('to'),
 		chalk.underline(name)
 	].join(' ') + '\n')
-})
+}
 
-const subtract = so(function* (name, amount, options) {
+const subtract = async (name, amount, options) => {
 	if (!options) options = {}
 	if (!name) {
 		process.stderr.write('Missing `name` argument.')
@@ -102,7 +101,7 @@ const subtract = so(function* (name, amount, options) {
 
 	amount = ms(amount)
 	let result
-	try { result = yield track.subtract(name, amount) }
+	try { result = await track.subtract(name, amount) }
 	catch (err) { return showError(err) }
 	if (options.silent) return
 
@@ -112,7 +111,7 @@ const subtract = so(function* (name, amount, options) {
 		chalk.gray('from'),
 		chalk.underline(name)
 	].join(' ') + '\n')
-})
+}
 
 const statusOfTracker = (tracker) => {
 	let elapsed = tracker.started ? Date.now() - tracker.started : 0
@@ -130,10 +129,10 @@ const statusOfTracker = (tracker) => {
 	return output.join(' ')
 }
 
-const status = so(function* (name, options) {
+const status = async (name, options) => {
 	if (!options) options = {}
 	let trackers
-	try { trackers = yield track.read(name) }
+	try { trackers = await track.read(name) }
 	catch (err) { return showError(err) }
 	if (options.silent) return
 
@@ -147,7 +146,7 @@ const status = so(function* (name, options) {
 			.map((name) => statusOfTracker(trackers[name]))
 			.join('\n') + '\n')
 	}
-})
+}
 
 const help = [
 	chalk.yellow('track start <name>'),

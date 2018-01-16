@@ -45,7 +45,7 @@
 		"shortid": "^2.2.8",
 		"so": "^1.0.1",
 		"tap-min": "^1.2.1",
-		"tape-co": "^1.0.1"
+		"tape": "^4.8.0"
 	},
 	"scripts": {
 		"test": "node test.js | tap-min",
