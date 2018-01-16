@@ -11,10 +11,6 @@ const so =      require('so')
 
 const track =   require('./index')()
 
-
-
-
-
 const symbols = {
 	started:  chalk.green(figures.play),
 	stopped:  chalk.red(figures.squareSmallFilled),
@@ -27,8 +23,6 @@ const showError = (err) => {
 	].join(' ') + '\n')
 	process.exit(1)
 }
-
-
 
 const start = so(function* (name, options) {
 	if (!options) options = {}
@@ -51,8 +45,6 @@ const start = so(function* (name, options) {
 	].join(' ') + '\n')
 })
 
-
-
 const stop = so(function* (name, options, apply = true) {
 	if (!options) options = {}
 	if (!name) {
@@ -71,8 +63,6 @@ const stop = so(function* (name, options, apply = true) {
 		chalk.gray(apply ? 'stopped' : 'aborted')
 	].join(' ') + '\n')
 })
-
-
 
 const add = so(function* (name, amount, options) {
 	if (!options) options = {}
@@ -99,8 +89,6 @@ const add = so(function* (name, amount, options) {
 	].join(' ') + '\n')
 })
 
-
-
 const subtract = so(function* (name, amount, options) {
 	if (!options) options = {}
 	if (!name) {
@@ -125,8 +113,6 @@ const subtract = so(function* (name, amount, options) {
 		chalk.underline(name)
 	].join(' ') + '\n')
 })
-
-
 
 const statusOfTracker = (tracker) => {
 	let elapsed = tracker.started ? Date.now() - tracker.started : 0
@@ -162,8 +148,6 @@ const status = so(function* (name, options) {
 			.join('\n') + '\n')
 	}
 })
-
-
 
 const help = [
 	chalk.yellow('track start <name>'),
@@ -229,4 +213,3 @@ switch (argv._[0]) {
 		else showError(new Error('invalid command'))
 		break
 }
-// end

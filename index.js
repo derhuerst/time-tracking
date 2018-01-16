@@ -6,12 +6,7 @@ const so =      require('so')
 const fs =      require('fs-promise')
 const mkdirp =  require('mkdirp-then')
 
-
-
-
-
 const Track = {
-
 	file: path.join(os.homedir(), 'time-tracking/trackers.json'),
 
 	init: so(function* (name) {
@@ -35,8 +30,6 @@ const Track = {
 	_write: function (trackers) {
 		return fs.writeFile(this.file, JSON.stringify(trackers))
 	},
-
-
 
 	start: so(function* (name) {
 		let now = Date.now()
@@ -72,8 +65,6 @@ const Track = {
 		return result
 	}),
 
-
-
 	add: so(function* (name, amount) {
 		let now = Date.now()
 		let trackers = yield this.read()
@@ -86,10 +77,7 @@ const Track = {
 	subtract: function (name, amount) {
 		return this.add(name, -amount)
 	}
-
 }
-
-
 
 const create = (file) => {
 	// https://gist.github.com/derhuerst/a585c4916b1c361cc6f0
@@ -98,7 +86,5 @@ const create = (file) => {
 	return track
 }
 create.Track = Track
-
-
 
 module.exports = create

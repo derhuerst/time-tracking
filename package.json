@@ -1,41 +1,54 @@
 {
-	"name":                 "time-tracking",
-	"description":          "Minimalistic command line time tracking.",
-	"version":              "1.0.0",
-	"main":                 "index.js",
-	"files":                ["index.js", "track.js"],
-	"author":               "Jannis R <mail@jannisr.de>",
-	"homepage":             "https://github.com/derhuerst/time-tracking",
-	"repository":           "git://github.com/derhuerst/time-tracking.git",
-	"bugs":                 "https://github.com/derhuerst/time-tracking/issues",
-	"license":              "ISC",
-	"preferGlobal":         true,
-	"engines" :             {"node": ">=6"},
-	"bin":                  {"track": "./track.js"},
+	"name": "time-tracking",
+	"description": "Minimalistic command line time tracking.",
+	"version": "1.0.0",
+	"main": "index.js",
+	"files": [
+		"index.js",
+		"track.js"
+	],
+	"author": "Jannis R <mail@jannisr.de>",
+	"homepage": "https://github.com/derhuerst/time-tracking",
+	"repository": "git://github.com/derhuerst/time-tracking.git",
+	"bugs": "https://github.com/derhuerst/time-tracking/issues",
+	"license": "ISC",
+	"preferGlobal": true,
+	"engines": {
+		"node": ">=7.6"
+	},
+	"bin": {
+		"track": "./track.js"
+	},
 	"keywords": [
-		"time", "tracking", "track", "tasks",
-		"cli", "command line", "terminal", "tool"
+		"time",
+		"tracking",
+		"track",
+		"tasks",
+		"cli",
+		"command line",
+		"terminal",
+		"tool"
 	],
 	"dependencies": {
-		"chalk":            "^2.0.0",
-		"figures":          "^2",
-		"pad-left":         "^2.1",
-		"pad-right":        "^0.2.2",
-		"ms":               "^2.0.0",
-		"yargs": "^10.0.3",
-		"so":               "^1.0.1",
+		"chalk": "^2.0.0",
+		"figures": "^2",
 		"fs-promise": "^2.0.2",
-		"mkdirp-then":      "^1.2"
+		"mkdirp-then": "^1.2",
+		"ms": "^2.0.0",
+		"pad-left": "^2.1",
+		"pad-right": "^0.2.2",
+		"so": "^1.0.1",
+		"yargs": "^10.0.3"
 	},
 	"devDependencies": {
-		"tape-co": "^1.0.1",
-		"shortid": "^2.2.8",
-		"so":               "^1.0.1",
 		"is-roughly-equal": "^0.1",
-		"tap-min": "^1.2.1"
+		"shortid": "^2.2.8",
+		"so": "^1.0.1",
+		"tap-min": "^1.2.1",
+		"tape-co": "^1.0.1"
 	},
 	"scripts": {
 		"test": "node test.js | tap-min",
-		"prepublish":       "npm test"
+		"prepublishOnly": "npm test"
 	}
 }
