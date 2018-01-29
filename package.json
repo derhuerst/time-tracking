@@ -32,18 +32,16 @@
 	"dependencies": {
 		"chalk": "^2.0.0",
 		"figures": "^2",
-		"fs-promise": "^2.0.2",
 		"mkdirp-then": "^1.2",
 		"ms": "^2.0.0",
+		"mz": "^2.7.0",
 		"pad-left": "^2.1",
 		"pad-right": "^0.2.2",
-		"so": "^1.0.1",
 		"yargs": "^11.0.0"
 	},
 	"devDependencies": {
 		"is-roughly-equal": "^0.1",
 		"shortid": "^2.2.8",
-		"so": "^1.0.1",
 		"tap-min": "^1.2.1",
 		"tape": "^4.8.0"
 	},

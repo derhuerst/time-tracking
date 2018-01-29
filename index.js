@@ -2,7 +2,7 @@
 
 const path =    require('path')
 const os = require('os')
-const fs =      require('fs-promise')
+const fs = require('mz/fs')
 const mkdirp =  require('mkdirp-then')
 
 const Track = {
