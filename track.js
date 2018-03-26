@@ -113,6 +113,31 @@ const subtract = async (name, amount, options) => {
 	].join(' ') + '\n')
 }
 
+const set = async (name, amount, options) => {
+	if (!options) options = {}
+	if (!name) {
+		process.stderr.write('Missing `name` argument.')
+		return process.exit(1)
+	}
+	if (!amount) {
+		process.stderr.write('Missing `amount` argument.')
+		return process.exit(1)
+	}
+	amount = ms(amount)
+
+	let result
+	try { result = await track.set(name, amount) }
+	catch (err) { return showError(err) }
+	if (options.silent) return
+
+	process.stdout.write([
+		chalk.gray('set'),
+		ms(amount),
+		chalk.gray('to'),
+		chalk.underline(name)
+	].join(' ') + '\n')
+}
+
 const statusOfTracker = (tracker) => {
 	let elapsed = tracker.started ? Date.now() - tracker.started : 0
 	let output = [
@@ -164,6 +189,8 @@ const help = [
 	chalk.yellow('track subtract <name> <amount>'),
 	chalk.yellow('track - <name> <amount>'),
 	'  Subtract any amount of time from an existing tracker.',
+	chalk.yellow('track set <name> <amount>'),
+	'  Set the amount of time for an existing tracker.',
 	'',
 	chalk.yellow('track status <name>'),
 	chalk.yellow('track s <name>'),
@@ -198,6 +225,9 @@ switch (argv._[0]) {
 	case 'add':
 	case '+':
 		add(argv._[1], argv._[2], options)
+		break
+	case 'set':
+		set(argv._[1], argv._[2], options)
 		break
 	case 'subtract':
 	case '-':

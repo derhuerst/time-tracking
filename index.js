@@ -75,6 +75,14 @@ const Track = {
 
 	subtract: function (name, amount) {
 		return this.add(name, -amount)
+	},
+
+	set: async function (name, amount) {
+		const trackers = await this.read()
+		if (!trackers[name]) throw new Error(`${name} doesn't exist.`)
+		trackers[name].value = amount
+		await this._write(trackers)
+		return null
 	}
 }
 
