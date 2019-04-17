@@ -31,7 +31,7 @@
 	],
 	"dependencies": {
 		"chalk": "^2.0.0",
-		"figures": "^2",
+		"figures": "^3.0.0",
 		"mkdirp-then": "^1.2",
 		"ms": "^2.0.0",
 		"mz": "^2.7.0",
