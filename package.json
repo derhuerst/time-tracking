@@ -33,10 +33,10 @@
 		"chalk": "^2.0.0",
 		"figures": "^2",
 		"mkdirp-then": "^1.2",
-		"ms": "^2.0.0",
 		"mz": "^2.7.0",
 		"pad-left": "^2.1",
 		"pad-right": "^0.2.2",
+		"pretty-ms": "^5.0.0",
 		"yargs": "^13.1.0"
 	},
 	"devDependencies": {
