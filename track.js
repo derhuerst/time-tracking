@@ -167,9 +167,13 @@ const status = async (name, options) => {
 		if (name) process.stdout.write(statusOfTracker(trackers) + '\n')
 		else if (Object.keys(trackers).length === 0)
 			process.stdout.write(chalk.gray('no trackers\n'))
-		else process.stdout.write(Object.keys(trackers)
-			.map((name) => statusOfTracker(trackers[name]))
-			.join('\n') + '\n')
+		else {
+			const totalTime = Object.values(trackers).reduce((totalTime, t) => totalTime + t.value, 0)
+			process.stdout.write([
+				...Object.keys(trackers).map((name) => statusOfTracker(trackers[name])),
+				chalk.green('Total Time: ' + ms(totalTime))
+			].join('\n') + '\n')
+		}
 	}
 }
 
