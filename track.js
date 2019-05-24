@@ -10,6 +10,8 @@ const yargs =   require('yargs')
 
 const track =   require('./index')()
 
+let totalTime = 0
+
 const symbols = {
 	started:  chalk.green(figures.play),
 	stopped:  chalk.red(figures.squareSmallFilled),
@@ -151,6 +153,7 @@ const statusOfTracker = (tracker) => {
 			output.push(chalk.gray(started.toLocaleDateString()))
 		output.push(chalk.gray(started.toLocaleTimeString()))
 	}
+  totalTime += tracker.value
 	return output.join(' ')
 }
 
@@ -171,6 +174,7 @@ const status = async (name, options) => {
 			.map((name) => statusOfTracker(trackers[name]))
 			.join('\n') + '\n')
 	}
+  process.stdout.write(chalk.green('Total Time: ' + ms(totalTime)) + '\n')
 }
 
 const help = [
