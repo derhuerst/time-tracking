@@ -5,7 +5,7 @@ const chalk =   require('chalk')
 const figures = require('figures')
 const lPad =    require('pad-left')
 const rPad =    require('pad-right')
-const ms =      require('ms')
+const ms =      require('pretty-ms')
 const yargs =   require('yargs')
 
 const track =   require('./index')()
