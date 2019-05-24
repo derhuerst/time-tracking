@@ -153,7 +153,7 @@ const statusOfTracker = (tracker) => {
 			output.push(chalk.gray(started.toLocaleDateString()))
 		output.push(chalk.gray(started.toLocaleTimeString()))
 	}
-  totalTime += tracker.value
+  totalTime += tracker.value + elapsed
 	return output.join(' ')
 }
 
