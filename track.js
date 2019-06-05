@@ -5,7 +5,8 @@ const chalk =   require('chalk')
 const figures = require('figures')
 const lPad =    require('pad-left')
 const rPad =    require('pad-right')
-const ms = require('pretty-ms')
+const ms = require('ms')
+const prettyms = require('pretty-ms')
 const yargs =   require('yargs')
 
 const track =   require('./index')()
@@ -21,6 +22,11 @@ const showError = (err) => {
 		symbols.error, err.message
 	].join(' ') + '\n')
 	process.exit(1)
+}
+
+const renderDuration = (ms) => {
+	const unitCount = Math.max(Math.floor(Math.log10(ms)) - 5, 0)
+	return prettyms(ms, {unitCount, secondsDecimalDigits: 0}).slice(1)
 }
 
 const start = async (name, options) => {
@@ -142,11 +148,11 @@ const statusOfTracker = (tracker) => {
 	let elapsed = tracker.started ? Date.now() - tracker.started : 0
 	let output = [
 		lPad(chalk.underline(tracker.name), 25),
-		rPad(chalk.cyan(ms(tracker.value + elapsed)), 15, ' ')
+		rPad(chalk.cyan(renderDuration(tracker.value + elapsed)), 16, ' ')
 	]
 	if (tracker.started) {
 		const started = new Date(tracker.started)
-		output.push(symbols.started, ms(elapsed))
+		output.push(symbols.started, renderDuration(elapsed))
 		if (new Date().toDateString() !== started.toDateString())
 			output.push(chalk.gray(started.toLocaleDateString()))
 		output.push(chalk.gray(started.toLocaleTimeString()))
