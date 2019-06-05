@@ -10,7 +10,6 @@ const yargs =   require('yargs')
 
 const track =   require('./index')()
 
-let totalTime = 0
 
 const symbols = {
 	started:  chalk.green(figures.play),
@@ -140,7 +139,7 @@ const set = async (name, amount, options) => {
 	].join(' ') + '\n')
 }
 
-const statusOfTracker = (tracker) => {
+const statusOfTracker = (tracker, totalTime) => {
 	let elapsed = tracker.started ? Date.now() - tracker.started : 0
 	let output = [
 		lPad(chalk.underline(tracker.name), 25),
@@ -153,13 +152,17 @@ const statusOfTracker = (tracker) => {
 			output.push(chalk.gray(started.toLocaleDateString()))
 		output.push(chalk.gray(started.toLocaleTimeString()))
 	}
-  totalTime += tracker.value + elapsed
-	return output.join(' ')
+	totalTime += tracker.value + elapsed
+	return {
+		output: output.join(' '),
+		totalTime
+	}
 }
 
 const status = async (name, options) => {
 	if (!options) options = {}
 	let trackers
+  let totalTime = 0;
 	try { trackers = await track.read(name) }
 	catch (err) { return showError(err) }
 	if (options.silent) return
@@ -167,14 +170,22 @@ const status = async (name, options) => {
 	if (options.porcelain)
 		process.stdout.write(JSON.stringify(trackers))
 	else {
-		if (name) process.stdout.write(statusOfTracker(trackers) + '\n')
+		if (name) {
+			let status = statusOfTracker(trackers, totalTime)
+			totalTime += status['totalTime']
+			process.stdout.write(status['output'] + '\n')
+		}
 		else if (Object.keys(trackers).length === 0)
 			process.stdout.write(chalk.gray('no trackers\n'))
 		else process.stdout.write(Object.keys(trackers)
-			.map((name) => statusOfTracker(trackers[name]))
+			.map((name) => {
+				let status = statusOfTracker(trackers[name], totalTime)
+				totalTime += status['totalTime']
+				return status['output']
+			})
 			.join('\n') + '\n')
 	}
-  process.stdout.write(chalk.green('Total Time: ' + ms(totalTime)) + '\n')
+	process.stdout.write(chalk.green('Total Time: ' + ms(totalTime)) + '\n')
 }
 
 const help = [
