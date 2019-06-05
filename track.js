@@ -1,14 +1,15 @@
 #!/usr/bin/env node
 'use strict'
 
-const chalk =   require('chalk')
-const figures = require('figures')
-const lPad =    require('pad-left')
-const rPad =    require('pad-right')
-const ms =      require('pretty-ms')
-const yargs =   require('yargs')
+const chalk =    require('chalk')
+const figures =  require('figures')
+const lPad =     require('pad-left')
+const rPad =     require('pad-right')
+const ms =       require('ms')
+const prettyms = require('pretty-ms')
+const yargs =    require('yargs')
 
-const track =   require('./index')()
+const track =    require('./index')()
 
 const symbols = {
 	started:  chalk.green(figures.play),
@@ -142,11 +143,11 @@ const statusOfTracker = (tracker) => {
 	let elapsed = tracker.started ? Date.now() - tracker.started : 0
 	let output = [
 		lPad(chalk.underline(tracker.name), 25),
-		rPad(chalk.cyan(ms(tracker.value + elapsed)), 15, ' ')
+		rPad(chalk.cyan(prettyms(tracker.value + elapsed, {unitCount: 2})), 15, ' ')
 	]
 	if (tracker.started) {
 		const started = new Date(tracker.started)
-		output.push(symbols.started, ms(elapsed))
+		output.push(symbols.started, prettyms(elapsed, {unitCount: 2}))
 		if (new Date().toDateString() !== started.toDateString())
 			output.push(chalk.gray(started.toLocaleDateString()))
 		output.push(chalk.gray(started.toLocaleTimeString()))
