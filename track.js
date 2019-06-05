@@ -73,7 +73,7 @@ const add = async (name, amount, options) => {
 		process.stderr.write('Missing `amount` argument.')
 		return process.exit(1)
 	}
-	amount = ms(amount)
+	if ('string' === typeof amount) amount = ms(amount)
 
 	let result
 	try { result = await track.add(name, amount) }
@@ -119,7 +119,7 @@ const set = async (name, amount, options) => {
 		process.stderr.write('Missing `name` argument.')
 		return process.exit(1)
 	}
-	if (!amount) {
+	if (amount === null || amount === undefined) {
 		process.stderr.write('Missing `amount` argument.')
 		return process.exit(1)
 	}
