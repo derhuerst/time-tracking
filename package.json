@@ -1,7 +1,7 @@
 {
 	"name": "time-tracking",
 	"description": "Minimalistic command line time tracking.",
-	"version": "1.1.0",
+	"version": "2.0.0",
 	"main": "index.js",
 	"files": [
 		"index.js",
@@ -14,7 +14,7 @@
 	"license": "ISC",
 	"preferGlobal": true,
 	"engines": {
-		"node": ">=7.6"
+		"node": ">=8"
 	},
 	"bin": {
 		"track": "./track.js"
@@ -31,7 +31,7 @@
 	],
 	"dependencies": {
 		"chalk": "^2.0.0",
-		"figures": "^2",
+		"figures": "^3.0.0",
 		"mkdirp-then": "^1.2",
 		"ms": "^2.0.0",
 		"mz": "^2.7.0",
@@ -43,7 +43,7 @@
 	"devDependencies": {
 		"is-roughly-equal": "^0.1",
 		"shortid": "^2.2.8",
-		"tap-min": "^1.2.1",
+		"tap-min": "^2.0.0",
 		"tape": "^4.8.0"
 	},
 	"scripts": {
