@@ -38,7 +38,7 @@
 		"pad-left": "^2.1",
 		"pad-right": "^0.2.2",
 		"pretty-ms": "^5.0.0",
-		"yargs": "^14.0.0"
+		"yargs": "^15.0.1"
 	},
 	"devDependencies": {
 		"is-roughly-equal": "^0.1",
