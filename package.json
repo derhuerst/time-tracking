@@ -44,7 +44,7 @@
 		"is-roughly-equal": "^0.1",
 		"shortid": "^2.2.8",
 		"tap-min": "^2.0.0",
-		"tape": "^4.8.0"
+		"tape": "^5.0.0"
 	},
 	"scripts": {
 		"test": "node test.js | tap-min",
